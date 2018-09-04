@@ -1,0 +1,18 @@
+Package: srahelper
+Type: Package
+Title: SRA Helper
+Version: 0.1.0
+Authors@R: person("Jesse", "Connell", email = "ancon@upenn.edu", role = c("aut", "cre"))
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: Helper functions for working with SRA files and metadata.
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0
+Imports:
+  dnar (>= 0.1)
+Remotes:
+  github::sherrillmix/dnar
+Suggests:
+  testthat,
+  roxygen2
