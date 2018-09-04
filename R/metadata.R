@@ -176,9 +176,9 @@ read_template <- function(nm) {
 }
 
 
-#' Check SRA metadata for problems
+#' Check SRA fields for problems
 #'
-#' Check a data frame of SRA fieds (biosample attributes or library metadata)
+#' Check a data frame of SRA fields (biosample attributes or library metadata)
 #' for problems that may interfere with a submission.  Any problems found will
 #' be raised as warnings (unless \code{quiet=TRUE}) and returned as a vector.
 #'
@@ -187,8 +187,9 @@ read_template <- function(nm) {
 #'
 #' @return character vector of warnings
 #' @export
-validate_metadata <- function(data, quiet=FALSE) {
+validate_fields <- function(data, quiet=FALSE) {
   problems <- c()
+  # Mandatory fields
   if ("mandatory_fields" %in% names(attributes(data))) {
     for (a in attr(data, "mandatory_fields")) {
       # These two are "mandatory" but can be left all-blank during all-in-one
@@ -288,6 +289,8 @@ make_sra_metadata <- function(sample_attrs,
 #' @param data vector of data to check.
 #'
 #' @return True if NA or empty, FALSE otherwise.
+#'
+#' @export
 blank <- function(data) {
   is.na(data) | data == ""
 }
@@ -371,6 +374,12 @@ process_fixed_vocab <- function(data) {
 # Constants ---------------------------------------------------------------
 
 
+#' SRA empty field values
+#'
+#' These strings are listed in the SRA docs as options for data not present even
+#' for required fields.  See \code{\link{fill_blanks}}.
+#'
+#' @export
 BLANK_TYPES <- c('not collected',
                  'not applicable',
                  'missing')
@@ -379,6 +388,7 @@ BLANK_TYPES <- c('not collected',
 #'
 #' These are metadata field names that can only take on the values listed for
 #' each name.
+#' @export
 FIXED_VOCABULARY <- list(
   platform = c(
     "LS454",
