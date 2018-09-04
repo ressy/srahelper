@@ -4,11 +4,13 @@
 \alias{read_template}
 \title{Read SRA table template}
 \usage{
-read_template(nm)
+read_template(template_name, template_type = "biosample_attributes")
 }
 \arguments{
 \item{template_name}{name of submission type (e.g.,
 "MIMS.me.human-associated.4.0")}
+
+\item{template_type}{either "biosample_attributes" or "library_metadata".}
 }
 \value{
 data frame with SRA field names and types set by template.

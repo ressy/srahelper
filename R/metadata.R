@@ -141,7 +141,7 @@ build_biosamples_from_template <- function(template_name, sample_attrs,
                                            submission=NULL,
                                            col_pairs=NULL,
                                            constants=NULL) {
-  template <- read_template(template_name)
+  template <- read_template(template_name, "biosample_attributes")
   # Build biosamples data frame, using rows from sample attributes, columns and
   # column classes from template.
   len <- nrow(sample_attrs)*ncol(template)
@@ -175,12 +175,14 @@ build_biosamples_from_template <- function(template_name, sample_attrs,
 #'
 #' @param template_name name of submission type (e.g.,
 #'   "MIMS.me.human-associated.4.0")
+#' @param template_type either "biosample_attributes" or "library_metadata".
 #'
 #' @return data frame with SRA field names and types set by template.
 #' @export
-read_template <- function(nm) {
-  fp <- system.file("exdata", "templates",
-                    paste(nm, "tsv", sep = "."),
+read_template <- function(template_name,
+                          template_type="biosample_attributes") {
+  fp <- system.file("exdata", "templates", template_type,
+                    paste(template_name, "tsv", sep = "."),
                     package = methods::getPackageName())
   data <- read_sra_table(fp)
   mf <- attributes(data)$mandatory_fields
@@ -188,7 +190,6 @@ read_template <- function(nm) {
   attr(data, "optional_fields") <- of
   data
 }
-
 
 #' Check SRA fields for problems
 #'
