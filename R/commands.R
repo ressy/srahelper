@@ -43,3 +43,28 @@ ascp_make_command <- function(md,
                 "-d",
                 src, dest))
 }
+
+# list files in a subdirectory on the NCBI upload server.
+# Note that -k1 above means ascp will try to resume where possible when
+# uploading, so you don't need to manually track progress.
+ascp_list_files <- function(email, suffix,
+                            command = "ssh",
+                            fp_key = "~/.ssh/id_rsa-ncbi",
+                            dp_dest = format(Sys.time(), "%Y%m%d")) {
+  dest <- file.path("uploads",
+                            paste(email, suffix, sep = "_"),
+                            dp_dest)
+  cmd_ls <- paste("ls", dest)
+  cmd <- list(command = command,
+              input = cmd_ls,
+              stdout = TRUE,
+              args = c("-T",
+                       "-i",
+                       path.expand(fp_key),
+                       "subasp@upload.ncbi.nlm.nih.gov"))
+  files <- do.call(system2, cmd)
+  # There must be a better way to keep the command prompt out of this.
+  files <- sub("^aspsh> ", "", files)
+  files <- files[files != ""]
+  files
+}
