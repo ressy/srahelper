@@ -103,6 +103,37 @@ test_that("read_template handles unknown template", {
 })
 
 
+# list_templates ----------------------------------------------------------
+
+test_that("list_templates lists templates installed", {
+  templates <- list_templates()
+  templates2 <- list_templates("biosample_attributes")
+  expect_equal(length(templates), 4)
+  expect_true("MIGS.ba.human-associated.4.0" %in% templates)
+  expect_identical(templates, templates2)
+})
+
+test_that("list_templates lists metadata templates", {
+  templates <- list_templates("library_metadata")
+  expect_identical(templates, "SRA_metadata_acc")
+})
+
+test_that("list_templates warns for unknown template type", {
+  templates <- expect_warning(list_templates("something_else"),
+                              "Template type not recognized: something_else")
+  expect_equal(templates, character())
+})
+
+
+# list_template_types -----------------------------------------------------
+
+
+test_that("list_template_types lists template types installed", {
+  types <- list_template_types()
+  expect_identical(types, c("biosample_attributes", "library_metadata"))
+})
+
+
 # validate_fields ---------------------------------------------------------
 
 
