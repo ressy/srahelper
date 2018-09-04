@@ -11,11 +11,14 @@
 #'
 #' @param data data frame of SRA metadata
 #' @param fp file path to save text
+#' @param overwrite should existing files be replaced?  If \code{FALSE}
+#'   (default), an existing file throws an error.  If \code{TRUE}, an existing
+#'   file is replaced without any prompting.
 #' @param ... additional arguments for \code{utils::write.table}
 #'
 #' @export
 #' @describeIn write_sra_table Write SRA metadata to disk
-write_sra_table <- function(data, fp, ...) {
+write_sra_table <- function(data, fp, overwrite=FALSE, ...) {
   # empty strings are allowed in the BioProject Accession column for the
   # Biosamples spreadsheet, but not "not applicable".
   if ("bioproject_accession" %in% colnames(data)) {
@@ -27,6 +30,9 @@ write_sra_table <- function(data, fp, ...) {
   if ("sample_title" %in% colnames(data)) {
     idxl <- is.na(data$sample_title)
     data$sample_title[idxl] <- ""
+  }
+  if (file.exists(fp) & ! overwrite) {
+    stop(paste("Destination file already exists:", fp))
   }
   utils::write.table(x = data,
                      file = fp,
@@ -120,10 +126,14 @@ write_metadata <- function(data) {
 #'   "MIMS.me.human-associated.4.0")
 #' @param sample_attrs data frame of existing sample metadata to draw from.  Any
 #'   names given in the \code{col_pairs} argument will be used to explicitly map
-#'   column names from the existing data frame to he new data frame.  Remaining
-#'   columns with matching names will also be used.  Other columns are ignored.
+#'   column names from the existing data frame to the new data frame.  Remaining
+#'   columns with matching names will also be used.  Other columns not in
+#'   \code{col_pairs} or the template's fields are ignored.
 #' @param col_pairs named vector of column names in the existing data frame with
-#'   names set to column names in the new data frame.
+#'   names set to column names in the new data frame.  Vector names that don't
+#'   match known column names signify custom columns to add.
+#' @param constants vector of field names to match to constant values for all
+#'   samples.
 #'
 #' @return data frame with SRA BioSample attributes defined.
 #' @export
@@ -172,7 +182,11 @@ read_template <- function(nm) {
   fp <- system.file("exdata", "templates",
                     paste(nm, "tsv", sep = "."),
                     package = methods::getPackageName())
-  read_sra_table(fp)
+  data <- read_sra_table(fp)
+  mf <- attributes(data)$mandatory_fields
+  of <- colnames(data)[! colnames(data) %in% mf]
+  attr(data, "optional_fields") <- of
+  data
 }
 
 
@@ -231,7 +245,7 @@ validate_fields <- function(data, quiet=FALSE) {
 #'
 #' @return data frame with SRA metadata columns
 #' @export
-make_sra_metadata <- function(sample_attrs,
+build_metadata <- function(sample_attrs,
                               submission=NULL,
                               col_pairs=NULL,
                               constants=NULL) {
@@ -278,6 +292,19 @@ make_sra_metadata <- function(sample_attrs,
     attr(metadata, "submission") <- submission
   }
   metadata
+}
+
+# remove any fields that are optional and entirely blank.
+tidy_optional_fields <- function(data) {
+  fields <- attributes(data)$optional_fields
+  if (! is.null(fields)) {
+    for (f in fields) {
+    if (all(blank(data[[f]]))) {
+        data[[f]] <- NULL
+      }
+    }
+  }
+  data
 }
 
 
@@ -349,6 +376,11 @@ fill_from_columns <- function(data_new, data_old, col_pairs=NULL) {
       data_new[[colname]] <- as(data_old[[colname_old]],
                                 class(data_new[[colname]]))
   }
+  # Add any additional entries as extra columns
+  if (! is.null(col_pairs)) {
+    colnames_extra <- col_pairs[! names(col_pairs) %in% colnames(data_new)]
+    data_new[colnames_extra] <- data_old[colnames_extra]
+  }
   data_new
 }
 
@@ -369,7 +401,6 @@ process_fixed_vocab <- function(data) {
   }
   data
 }
-
 
 # Constants ---------------------------------------------------------------
 

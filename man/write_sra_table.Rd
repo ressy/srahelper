@@ -5,7 +5,7 @@
 \alias{read_sra_table}
 \title{Read and write SRA metadata to disk}
 \usage{
-write_sra_table(data, fp, ...)
+write_sra_table(data, fp, overwrite = FALSE, ...)
 
 read_sra_table(fp, ...)
 }
@@ -13,6 +13,10 @@ read_sra_table(fp, ...)
 \item{data}{data frame of SRA metadata}
 
 \item{fp}{file path to save text}
+
+\item{overwrite}{should existing files be replaced?  If \code{FALSE}
+(default), an existing file throws an error.  If \code{TRUE}, an existing
+file is replaced without any prompting.}
 
 \item{...}{additional arguments for \code{utils::write.table}}
 }

@@ -39,6 +39,10 @@ test_that("write_sra_table warns about sample uniqueness", {
   testthat::fail("test not yet implemented")
 })
 
+test_that("write_sra_table handles overwrite options", {
+  # check that overwrite is off by default and works when on
+  testthat::fail("test not yet implemented")
+})
 
 # write_biosamples --------------------------------------------------------
 
@@ -72,6 +76,13 @@ test_that("build_biosamples_from_template makes attributes data frame", {
   # test attributes: submission, template_name, mandatory_fields
   # test columns from implicit match, explicit with col_pairs, and constants
   # test rows
+})
+
+test_that("build_biosamples_from_template supports col_pairs", {
+  # make sure it pulls explicitly-named columns as expected
+  # make sure that extra column names are included (so custom columns can be
+  # added)
+  testthat::fail("test not yet implemented")
 })
 
 test_that("build_biosamples_from_template handles unknown template", {
@@ -128,6 +139,24 @@ test_that("validate_fields checks instrument model and platform", {
 
 test_that("validate_fields can skip warnings", {
   # quiet=TRUE
+  testthat::fail("test not yet implemented")
+})
+
+
+# build_metadata ----------------------------------------------------------
+
+
+test_that("build_metadata makes metadata data frame", {
+  testthat::fail("test not yet implemented")
+  # test attributes: submission, template_name, mandatory_fields
+  # test columns from implicit match, explicit with col_pairs, and constants
+  # test rows
+})
+
+test_that("build_metadata supports col_pairs", {
+  # make sure it pulls explicitly-named columns as expected
+  # make sure that extra column names are included (so custom columns can be
+  # added)
   testthat::fail("test not yet implemented")
 })
 

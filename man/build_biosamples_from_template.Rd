@@ -13,11 +13,16 @@ build_biosamples_from_template(template_name, sample_attrs,
 
 \item{sample_attrs}{data frame of existing sample metadata to draw from.  Any
 names given in the \code{col_pairs} argument will be used to explicitly map
-column names from the existing data frame to he new data frame.  Remaining
-columns with matching names will also be used.  Other columns are ignored.}
+column names from the existing data frame to the new data frame.  Remaining
+columns with matching names will also be used.  Other columns not in
+\code{col_pairs} or the template's fields are ignored.}
 
 \item{col_pairs}{named vector of column names in the existing data frame with
-names set to column names in the new data frame.}
+names set to column names in the new data frame.  Vector names that don't
+match known column names signify custom columns to add.}
+
+\item{constants}{vector of field names to match to constant values for all
+samples.}
 }
 \value{
 data frame with SRA BioSample attributes defined.
