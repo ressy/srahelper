@@ -81,10 +81,11 @@ read_sra_table <- function(fp, ...) {
 #' \code{<type>.tsv} otherwise.
 #'
 #' @param data data frame of SRA metadata
+#' @param ... additional arguments for \code{\link{write_sra_table}}
 #'
 #' @export
 #' @describeIn write_biosamples Write SRA BioSample attributes to disk
-write_biosamples <- function(data) {
+write_biosamples <- function(data, ...) {
   s <- attributes(data)$submission
   if (! is.null(s)) {
     dp <- s
@@ -97,7 +98,7 @@ write_biosamples <- function(data) {
     fn <- "biosamples.tsv"
   }
   fp <- file.path(dp, fn)
-  write_sra_table(data, fp)
+  write_sra_table(data, fp, ...)
 }
 
 #' @describeIn write_biosamples Write SRA library metadata to disk
@@ -129,6 +130,8 @@ write_metadata <- function(data) {
 #'   column names from the existing data frame to the new data frame.  Remaining
 #'   columns with matching names will also be used.  Other columns not in
 #'   \code{col_pairs} or the template's fields are ignored.
+#' @param submission the accession assigned by the SRA for the submission, like
+#'   "SUB####".  Will be attached to the output data frame as an attribute.
 #' @param col_pairs named vector of column names in the existing data frame with
 #'   names set to column names in the new data frame.  Vector names that don't
 #'   match known column names signify custom columns to add.
@@ -137,7 +140,8 @@ write_metadata <- function(data) {
 #'
 #' @return data frame with SRA BioSample attributes defined.
 #' @export
-build_biosamples_from_template <- function(template_name, sample_attrs,
+build_biosamples_from_template <- function(template_name,
+                                           sample_attrs,
                                            submission=NULL,
                                            col_pairs=NULL,
                                            constants=NULL) {

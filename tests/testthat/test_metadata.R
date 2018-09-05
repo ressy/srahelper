@@ -66,6 +66,8 @@ test_that("write_sra_table handles overwrite options", {
   expect_equal(data2$sample_name[1], "sample1")
   expect_error(write_sra_table(data, fp),
                paste("Destination file already exists:", fp))
+  data2 <- read_sra_table(fp)
+  expect_equal(data2$sample_name[1], "sample1")
   # Make sure overwriting works when enabled
   data$sample_name[1] <- "newname"
   write_sra_table(data, fp, overwrite = TRUE)
@@ -76,15 +78,56 @@ test_that("write_sra_table handles overwrite options", {
 
 # write_biosamples --------------------------------------------------------
 
+setup_biosamples <- function(submission = "SUB") {
+  sample_attrs <- setup_sra_table()
+  biosamples <- build_biosamples_from_template("MIGS.ba.human-associated.4.0",
+                                               sample_attrs = sample_attrs,
+                                               submission = submission)
+  biosamples <- tidy_optional_fields(biosamples)
+  biosamples
+}
 
 test_that("write_biosamples writes SRA biosample attributes", {
-  testthat::fail("test not yet implemented")
+  biosamples <- setup_biosamples()
+  dp <- tempfile()
+  dir.create(dp)
+  setwd(dp)
+  write_biosamples(biosamples)
+  fp <- file.path(submission, paste0(submission, "_biosamples.tsv"))
+  expect_true(file.exists(fp))
 })
 
 test_that("write_biosamples writes attributes, no submission set", {
-  testthat::fail("test not yet implemented")
+  biosamples <- setup_biosamples(NULL)
+  dp <- tempfile()
+  dir.create(dp)
+  setwd(dp)
+  write_biosamples(biosamples)
+  fp <- "biosamples.tsv"
+  expect_true(file.exists(fp))
 })
 
+test_that("write_biosamples handles overwrite options", {
+  # This functionality comes from write_sra_table and should be usable from here
+  # too.
+  biosamples <- setup_biosamples()
+  dp <- tempfile()
+  dir.create(dp)
+  setwd(dp)
+  write_biosamples(biosamples)
+  fp <- file.path(submission, paste0(submission, "_biosamples.tsv"))
+  expect_true(file.exists(fp))
+  data2 <- read_sra_table(fp)
+  expect_equal(data2$sample_name[1], "sample1")
+  expect_error(write_biosamples(biosamples),
+               paste("Destination file already exists:", fp))
+  data2 <- read_sra_table(fp)
+  expect_equal(data2$sample_name[1], "sample1")
+  biosamples$sample_name[1] <- "newname"
+  write_biosamples(biosamples, overwrite = TRUE)
+  data2 <- read_sra_table(fp)
+  expect_equal(data2$sample_name[1], "newname")
+})
 
 # write_metadata ----------------------------------------------------------
 
