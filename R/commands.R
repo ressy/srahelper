@@ -1,3 +1,5 @@
+# Some helpers for SRA-related executables like fastq-dump or ascp.
+
 # download fastq files for the SRR's in the given run info table.
 fastq_dump <- function(run_info,
                        sample_name_col = "Library_Name",
