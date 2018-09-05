@@ -9,10 +9,16 @@ context("Test metadata utilities")
 
 
 test_that("read_sra_table can read all template files", {
-  dp_templates <- system.file("exdata", "templates", package = "srahelper")
+  dp_templates <- system.file("exdata", "templates", "biosample_attributes",
+                              package = "srahelper")
   fps <- list.files(dp_templates, full.names = TRUE)
   mds <- lapply(fps, read_sra_table)
-  testthat::fail("test not yet implemented")
+  # There should be N data frames
+  mdclass <- sapply(mds, class)
+  expect_equal(mdclass, rep("data.frame", length(fps)))
+  # They all have mandatory fields defined
+  mfclass <- sapply(lapply(mds, attr, "mandatory_fields"), class)
+  expect_equal(mfclass, rep("character", length(fps)))
 })
 
 test_that("read_sra_table reads a Run Info table", {
@@ -21,28 +27,52 @@ test_that("read_sra_table reads a Run Info table", {
   testthat::fail("test not yet implemented")
 })
 
-test_that("make_sra_metadata creates new data frame", {
-  testthat::fail("test not yet implemented")
-})
-
 
 # write_sra_table ---------------------------------------------------------
 
 
-test_that("write_sra_table writes SRA fields", {
-  testthat::fail("test not yet implemented")
-})
+setup_sra_table <- function() {
+  data.frame(sample_name = paste0("sample", 1:5),
+             sample_thing1 = (1:5)*5,
+             sample_thing2 = letters[1:5],
+             stringsAsFactors = FALSE)
+}
 
-test_that("write_sra_table warns about sample uniqueness", {
-  # SRA will refuse biosample metadata that it doesn't think distinguishes
-  # samples well enough.  What were those rules, again?
-  testthat::fail("test not yet implemented")
+test_that("write_sra_table writes SRA fields", {
+  # Test write_sra_table alongside read_sra_table by ensuring they match.
+  data <- setup_sra_table()
+  fp <- tempfile()
+  write_sra_table(data, fp)
+  expect_true(file.exists(fp))
+  # Rownames will be sample names
+  rownames(data) <- data$sample_name
+  # Columns are always character
+  data$sample_thing1 <- as.character(data$sample_thing1)
+  # The comments and mandatory fields attributes are always present from read_sra_table
+  attr(data, "comments") <- character()
+  attr(data, "mandatory_fields") <- character()
+  data2 <- read_sra_table(fp)
+  expect_identical(data2, data)
 })
 
 test_that("write_sra_table handles overwrite options", {
   # check that overwrite is off by default and works when on
-  testthat::fail("test not yet implemented")
+  data <- setup_sra_table()
+  fp <- tempfile()
+  # Make sure overwriting is blocked by default
+  write_sra_table(data, fp)
+  expect_true(file.exists(fp))
+  data2 <- read_sra_table(fp)
+  expect_equal(data2$sample_name[1], "sample1")
+  expect_error(write_sra_table(data, fp),
+               paste("Destination file already exists:", fp))
+  # Make sure overwriting works when enabled
+  data$sample_name[1] <- "newname"
+  write_sra_table(data, fp, overwrite = TRUE)
+  data2 <- read_sra_table(fp)
+  expect_equal(data2$sample_name[1], "newname")
 })
+
 
 # write_biosamples --------------------------------------------------------
 
@@ -165,6 +195,12 @@ test_that("validate_fields checks filenames for directories", {
 
 test_that("validate_fields checks instrument model and platform", {
   # The instrument model needs to match the platform selected.
+  testthat::fail("test not yet implemented")
+})
+
+test_that("validate_fields warns about sample uniqueness", {
+  # SRA will refuse biosample metadata that it doesn't think distinguishes
+  # samples well enough.  What were those rules, again?
   testthat::fail("test not yet implemented")
 })
 
