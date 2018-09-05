@@ -93,7 +93,8 @@ test_that("write_biosamples writes SRA biosample attributes", {
   dir.create(dp)
   setwd(dp)
   write_biosamples(biosamples)
-  fp <- file.path(submission, paste0(submission, "_biosamples.tsv"))
+  s <- attributes(biosamples)$submission
+  fp <- file.path(s, paste0(s, "_biosamples.tsv"))
   expect_true(file.exists(fp))
 })
 
@@ -115,7 +116,8 @@ test_that("write_biosamples handles overwrite options", {
   dir.create(dp)
   setwd(dp)
   write_biosamples(biosamples)
-  fp <- file.path(submission, paste0(submission, "_biosamples.tsv"))
+  s <- attributes(biosamples)$submission
+  fp <- file.path(s, paste0(s, "_biosamples.tsv"))
   expect_true(file.exists(fp))
   data2 <- read_sra_table(fp)
   expect_equal(data2$sample_name[1], "sample1")
@@ -145,21 +147,63 @@ test_that("write_metadata writes metadata, no submission set", {
 
 
 test_that("build_biosamples_from_template makes attributes data frame", {
-  testthat::fail("test not yet implemented")
+  sample_attrs <- setup_sra_table()
+  template <- "MIGS.ba.human-associated.4.0"
+  biosamples <- build_biosamples_from_template(template_name = template,
+                                               sample_attrs = sample_attrs)
   # test attributes: submission, template_name, mandatory_fields
-  # test columns from implicit match, explicit with col_pairs, and constants
-  # test rows
+  expect_equal(attr(biosamples, "submission"), NULL)
+  expect_equal(attr(biosamples, "template"), template)
+  expect_equal(length(attr(biosamples, "mandatory_fields")), 13)
+  expect_equal(length(attr(biosamples, "optional_fields")), 68)
+  expect_equal(biosamples$sample_name, sample_attrs$sample_name)
+})
+
+test_that("build_biosamples_from_template handles submission", {
+  sample_attrs <- setup_sra_table()
+  template <- "MIGS.ba.human-associated.4.0"
+  sub <- "SUB"
+  biosamples <- build_biosamples_from_template(template_name = template,
+                                               sample_attrs = sample_attrs,
+                                               submission = sub)
+  expect_equal(attr(biosamples, "submission"), sub)
 })
 
 test_that("build_biosamples_from_template supports col_pairs", {
   # make sure it pulls explicitly-named columns as expected
   # make sure that extra column names are included (so custom columns can be
   # added)
-  testthat::fail("test not yet implemented")
+  sample_attrs <- setup_sra_table()
+  template <- "MIGS.ba.human-associated.4.0"
+  col_pairs <- c(sample_title = "sample_name",
+                 sample_thing1 = "sample_thing1")
+  biosamples <- build_biosamples_from_template(template_name = template,
+                                               sample_attrs = sample_attrs,
+                                               col_pairs = col_pairs)
+  expect_equal(biosamples$sample_title, sample_attrs$sample_name)
+  expect_equal(biosamples$sample_thing1, sample_attrs$sample_thing1)
+})
+
+test_that("build_biosamples_from_template supports constants", {
+  sample_attrs <- setup_sra_table()
+  template <- "MIGS.ba.human-associated.4.0"
+  constants <- c(sample_const = "X")
+  biosamples <- build_biosamples_from_template(template_name = template,
+                                               sample_attrs = sample_attrs,
+                                               constants = constants)
+  expect_equal(biosamples$sample_const,
+               rep(constants[[1]], nrow(biosamples)))
 })
 
 test_that("build_biosamples_from_template handles unknown template", {
-  testthat::fail("test not yet implemented")
+  sample_attrs <- setup_sra_table()
+  template_name <- "non.existent.template"
+  expect_error(
+    expect_warning(
+      build_biosamples_from_template(template_name = template_name,
+                                     sample_attrs = sample_attrs),
+      paste("Template name not recognized:", template_name))
+  )
 })
 
 
@@ -168,15 +212,26 @@ test_that("build_biosamples_from_template handles unknown template", {
 
 test_that("read_template can read all template files", {
   # see read_sra_table above as well
-  testthat::fail("test not yet implemented")
+  for (template_name in list_templates()) {
+    # They all have mandatory fields, optional fields, and comments
+    template <- read_template(template_name)
+    attrs <- c("mandatory_fields", "optional_fields", "comments")
+    expect_true(all(attrs %in% names(attributes(template))))
+  }
 })
 
 test_that("read_template handles unknown template", {
-  testthat::fail("test not yet implemented")
+  template_name <- "non.existent.template"
+  expect_error(
+    expect_warning(
+      read_template(template_name),
+      paste("Template name not recognized:", template_name))
+  )
 })
 
 
 # list_templates ----------------------------------------------------------
+
 
 test_that("list_templates lists templates installed", {
   templates <- list_templates()
