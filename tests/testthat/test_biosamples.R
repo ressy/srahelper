@@ -1,19 +1,6 @@
 context("Test BioSample Attribute functions")
 
 
-# Helpers -----------------------------------------------------------------
-
-
-setup_biosamples <- function(submission = "SUB") {
-  sample_attrs <- setup_sra_table()
-  biosamples <- build_biosamples_from_template("MIGS.ba.human-associated.4.0",
-                                               sample_attrs = sample_attrs,
-                                               submission = submission)
-  biosamples <- tidy_optional_fields(biosamples)
-  biosamples
-}
-
-
 # build_biosamples --------------------------------------------------------
 
 

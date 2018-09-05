@@ -67,8 +67,25 @@ test_that("write_sra_table handles overwrite options", {
 
 
 test_that("validate_fields handles biosample attributes", {
-  # see read_sra_table above as well
-  testthat::fail("test not yet implemented")
+  # This default has blanks for mandatory fields.  There should be a warning
+  # raised and an entry in the returned vector for each one.
+  biosamples <- setup_biosamples()
+  expect_warning(problems <- validate_fields(biosamples))
+  mf <- attributes(biosamples)$mandatory_fields
+  blnks <- mf[sapply(mf, function(f) any(blank(biosamples[[f]])))]
+  problems_expected <- paste("Mandatory field is missing values:", blnks)
+  expect_equal(problems, problems_expected)
+  # What if a mandatory column is completely missing?  Should be the same
+  # result.
+  biosamples$organism <- NULL
+  expect_warning(problems <- validate_fields(biosamples))
+  expect_equal(problems, problems_expected)
+  # And if we have text in all the mandatory fields?  For now it should think
+  # everything is fine, though really there should be more checks.
+  biosamples <- setup_biosamples()
+  biosamples <- fill_blanks(mf, biosamples)
+  problems <- validate_fields(biosamples)
+  expect_null(problems)
 })
 
 test_that("validate_fields handles library metadata", {

@@ -1,4 +1,5 @@
-# Functions to handle Library Metadata tables.
+# Functions to handle Library Metadata tables (the info specific to sample
+# preparation and sequencing; for general metadata, see tables.R.)
 
 #' @describeIn write_biosamples Write SRA library metadata to disk
 write_metadata <- function(data) {
@@ -90,43 +91,6 @@ tidy_optional_fields <- function(data) {
 # Util --------------------------------------------------------------------
 
 
-#' Check for blank cells
-#'
-#' @param data vector of data to check.
-#'
-#' @return True if NA or empty, FALSE otherwise.
-#'
-#' @export
-blank <- function(data) {
-  is.na(data) | data == ""
-}
-
-#' Fill blanks with SRA keyword
-#'
-#' @param vec either vector of column names (if data not NULL) or explicit data.
-#' @param data data frame to use, if filling multiple columns.
-#' @param value text to fill with; one of the allowed values in
-#'   \code{BLANK_TYPES}.
-#'
-#' @return data modified vector or data frame with blanks filled in.
-#'
-#' @export
-fill_blanks <- function(vec, data=NULL, value="missing") {
-  if (! value %in% BLANK_TYPES) {
-    warning(paste("Value should be one of:"),
-            paste(BLANK_TYPES, collapse = ", "))
-  }
-  if (is.null(data)) {
-    vec[blank(vec)] <- value
-    vec
-  } else {
-    for (v in vec) {
-      data[[v]][blank(data[[v]])] <- value
-    }
-    data
-  }
-}
-
 #' Fill in columns from reference
 #'
 #' Fill columns in one data frame from another, using data classes from the
@@ -161,22 +125,4 @@ fill_from_columns <- function(data_new, data_old, col_pairs=NULL) {
     data_new[colnames_extra] <- data_old[colnames_extra]
   }
   data_new
-}
-
-#' Create factors for known fields with fixed vocabulary
-#'
-#' For SRA fields in the given data frame known to have a strictly fixed
-#' vocabulary (according to \code{FIXED_VOCABULARY}), convert each to a factor
-#' with levels corresponding to the vocabulary.
-#'
-#' @param data data frame to modify.
-#'
-#' @return data frame with recognized columns converted to factors.
-process_fixed_vocab <- function(data) {
-  nms <- names(FIXED_VOCABULARY)[match(colnames(data), names(FIXED_VOCABULARY))]
-  nms <- nms[! is.na(nms)]
-  for (nm in nms) {
-    data[[nm]] <- factor(data[[nm]], levels = unlist(FIXED_VOCABULARY[[nm]]))
-  }
-  data
 }
