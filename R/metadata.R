@@ -2,7 +2,7 @@
 # preparation and sequencing; for general metadata, see tables.R.)
 
 #' @describeIn write_biosamples Write SRA library metadata to disk
-write_metadata <- function(data) {
+write_metadata <- function(data, ...) {
   s <- attributes(data)$submission
   if (! is.null(s)) {
     dp <- s
@@ -15,7 +15,7 @@ write_metadata <- function(data) {
     fn <- "metadata.tsv"
   }
   fp <- file.path(dp, fn)
-  write_sra_table(data, fp)
+  write_sra_table(data, fp, ...)
 }
 
 #' Create blank metadata
@@ -47,8 +47,6 @@ build_metadata <- function(sample_attrs,
     title                <- character(N)
     bioproject_accession <- character(N)
     biosample_accession  <- character(N)
-    sample_name          <- character(N)
-
   })
   metadata <- do.call(data.frame, c(metadata, list(stringsAsFactors=FALSE)))
   metadata <- fill_from_columns(metadata, sample_attrs, col_pairs)

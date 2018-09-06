@@ -1,5 +1,11 @@
 # Functions to handle BioSample Attributes tables.
 
+
+
+# Package MIMS: metagenome/environmental, human-associated; version 4.0
+# https://submit.ncbi.nlm.nih.gov/biosample/template/?package=MIMS.me.human-associated.4.0&action=definition
+# Example sample: SAMN02808661
+
 #' Create BioSamples Table
 #'
 #' Create a new SRA BioSamples table using a named template and existing sample
