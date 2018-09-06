@@ -85,7 +85,7 @@ test_that("validate_fields handles biosample attributes", {
   biosamples <- setup_biosamples()
   biosamples <- fill_blanks(mf, biosamples)
   problems <- validate_fields(biosamples)
-  expect_null(problems)
+  expect_equal(problems, character())
 })
 
 test_that("validate_fields handles library metadata", {
@@ -122,29 +122,42 @@ test_that("validate_fields handles library metadata", {
                              constants = constants)
   metadata <- fill_blanks(mf, metadata)
   problems <- validate_fields(metadata)
-  expect_null(problems)
-})
-
-test_that("validate_fields handles generic data frame", {
-  # in this one, no special attributes, just a data frame.  columns checked by
-  # name only.
-  testthat::fail("test not yet implemented")
-})
-
-test_that("validate_fields checks mandatory fields", {
-  # also note special handling for biosample_accession / bioproject_accession
-  testthat::fail("test not yet implemented")
+  expect_equal(problems, character())
 })
 
 test_that("validate_fields checks filenames for directories", {
   # The processing gets confused server-side if the upload directory has any
   # sort of nested structure.
-  testthat::fail("test not yet implemented")
+  sra_table <- setup_sra_table()
+  sra_table$filename <- paste0(sra_table$sample_name, ".fastq")
+  problems <- validate_fields(sra_table)
+  expect_equal(problems, character())
+  sra_table$filename <- file.path("folder", sra_table$filename)
+  expect_warning(problems <- validate_fields(sra_table))
+  problems_expected <- "Filename column contains directory paths: filename"
+  expect_equal(problems, problems_expected)
 })
 
 test_that("validate_fields checks instrument model and platform", {
   # The instrument model needs to match the platform selected.
-  testthat::fail("test not yet implemented")
+  sra_table <- setup_sra_table()
+  # These match up, should be fine.
+  sra_table$platform <- "ILLUMINA"
+  sra_table$instrument_model <- "Illumina MiSeq"
+  problems <- validate_fields(sra_table)
+  expect_equal(problems, character())
+  # PacBio RS is a valid instrument model but not for ILLUMINA.
+  sra_table$instrument_model <- "PacBio RS"
+  expect_warning(problems <- validate_fields(sra_table))
+  expect_equal(problems, "Mismatched instrument_model and platform values")
+  # These are invalid values for either column.
+  sra_table$instrument_model <- "does not exist"
+  expect_warning(problems <- validate_fields(sra_table))
+  expect_equal(problems, "Unknown instrument_model values")
+  sra_table$platform <- "does not exist"
+  sra_table$instrument_model <- "PacBio RS"
+  expect_warning(problems <- validate_fields(sra_table))
+  expect_equal(problems, "Unknown platform values")
 })
 
 test_that("validate_fields warns about sample uniqueness", {
@@ -154,8 +167,12 @@ test_that("validate_fields warns about sample uniqueness", {
 })
 
 test_that("validate_fields can skip warnings", {
-  # quiet=TRUE
-  testthat::fail("test not yet implemented")
+  sra_table <- setup_sra_table()
+  sra_table$platform <- "does not exist"
+  expect_warning(problems <- validate_fields(sra_table))
+  expect_equal(problems, "Unknown platform values")
+  problems <- validate_fields(sra_table, quiet = TRUE)
+  expect_equal(problems, "Unknown platform values")
 })
 
 

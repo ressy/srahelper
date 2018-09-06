@@ -84,14 +84,14 @@ read_sra_table <- function(fp, ...) {
 #' @return character vector of warnings
 #' @export
 validate_fields <- function(data, quiet=FALSE) {
-  problems <- c()
-  # Mandatory fields
+  problems <- character()
+  all_blank_ok <- c("biosample_accession", "bioproject_accession")
+  # Mandatory fields, as identified by an attribute attached to the data frame.
   if ("mandatory_fields" %in% names(attributes(data))) {
     for (a in attr(data, "mandatory_fields")) {
       # These two are "mandatory" but can be left all-blank during all-in-one
       # submissions.
-      if (a %in% c("biosample_accession", "bioproject_accession") &&
-          all(blank(data[[a]]))) {
+      if (a %in% all_blank_ok && all(blank(data[[a]]))) {
         next
       }
       if (! a %in% colnames(data) || any(blank(data[[a]]))) {
@@ -108,6 +108,37 @@ validate_fields <- function(data, quiet=FALSE) {
       problems <- c(problems,
                     paste("Filename column contains directory paths:", column))
   }
+  platform <- data[["platform"]]
+  instrument_model <- data[["instrument_model"]]
+  hardware_mismatch <- FALSE
+  if (! is.null(platform) && ! all(blank(platform))) {
+    if (any(! platform %in% FIXED_VOCABULARY$platform)) {
+      problems <- c(problems,
+                    "Unknown platform values")
+      hardware_mismatch <- TRUE
+    }
+  }
+  if (! is.null(instrument_model) && ! all(blank(instrument_model))) {
+    inst_all <-unlist(FIXED_VOCABULARY$instrument_model)
+    if (any(! instrument_model %in% inst_all)) {
+      problems <- c(problems,
+                    "Unknown instrument_model values")
+      hardware_mismatch <- TRUE
+    }
+  }
+  if (! is.null(platform)         && ! all(blank(platform)) &&
+      ! is.null(instrument_model) && ! all(blank(instrument_model)) &&
+      ! hardware_mismatch) {
+    # Last thing; are any platform/model pairs mismatched?
+    ms <- mapply(function(p, m) m %in% FIXED_VOCABULARY$instrument_model[[p]],
+                 platform,
+                 instrument_model)
+    if (! all(ms)) {
+      problems <- c(problems,
+                    "Mismatched instrument_model and platform values")
+    }
+  }
+
   # TODO validate other specific columns:
   # collection_date
   # ...?
