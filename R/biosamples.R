@@ -1,11 +1,5 @@
 # Functions to handle BioSample Attributes tables.
 
-
-
-# Package MIMS: metagenome/environmental, human-associated; version 4.0
-# https://submit.ncbi.nlm.nih.gov/biosample/template/?package=MIMS.me.human-associated.4.0&action=definition
-# Example sample: SAMN02808661
-
 #' Create BioSamples Table
 #'
 #' Create a new SRA BioSamples table using a named template and existing sample
@@ -87,4 +81,27 @@ write_biosamples <- function(data, ...) {
   }
   fp <- file.path(dp, fn)
   write_sra_table(data, fp, ...)
+}
+
+# Package MIMS: metagenome/environmental, human-associated; version 4.0
+# https://submit.ncbi.nlm.nih.gov/biosample/template/?package=MIMS.me.human-associated.4.0&action=definition
+# Example sample: SAMN02808661
+
+download_template <- function(template_name) {
+  HTTP_SRV = "https://submit.ncbi.nlm.nih.gov"
+  args <- c(package=template_name, action="download_tsv") # or download_excel
+  url_args <- paste(names(args), args,
+                    sep = "=",
+                    collapse = "&")
+  url <- paste0(HTTP_SRV, "/biosample/template/?", url_args)
+  con <- file(url, "r")
+  txt <- ""
+  N <- 1024*1024
+  chunk <- readChar(con, N)
+  while (length(chunk) > 0) {
+    txt <- paste(txt, chunk)
+    chunk <- readChar(con, N)
+  }
+  close(con)
+  txt
 }
