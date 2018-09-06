@@ -7,7 +7,7 @@
 \usage{
 write_biosamples(data, ...)
 
-write_metadata(data)
+write_metadata(data, ...)
 }
 \arguments{
 \item{data}{data frame of SRA metadata}
