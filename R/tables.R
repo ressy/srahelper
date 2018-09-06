@@ -94,7 +94,7 @@ validate_fields <- function(data, quiet=FALSE) {
           all(blank(data[[a]]))) {
         next
       }
-      if (any(blank(data[[a]]))) {
+      if (! a %in% colnames(data) || any(blank(data[[a]]))) {
         problems <- c(problems,
                       paste("Mandatory field is missing values:",
                             a))
@@ -133,6 +133,10 @@ blank <- function(data) {
 
 #' Fill blanks with SRA keyword
 #'
+#' Factors will be ignored since they have their own controlled vocabulary, and
+#' biosample_accession and bioproject_accession columns will be ignored for data
+#' frames as these are allowed to be left blank for all-in-one submissions.
+#'
 #' @param vec either vector of column names (if data not NULL) or explicit data.
 #' @param data data frame to use, if filling multiple columns.
 #' @param value text to fill with; one of the allowed values in
@@ -146,12 +150,15 @@ fill_blanks <- function(vec, data=NULL, value="missing") {
     warning(paste("Value should be one of:"),
             paste(BLANK_TYPES, collapse = ", "))
   }
-  if (is.null(data)) {
+  if (is.null(data) & !is.factor(vec)) {
     vec[blank(vec)] <- value
     vec
   } else {
-    for (v in vec) {
-      data[[v]][blank(data[[v]])] <- value
+    ignores <- c("biosample_accession", "bioproject_accession")
+    for (v in vec[! vec %in% ignores]) {
+      if (! is.factor(data[[v]])) {
+        data[[v]][blank(data[[v]])] <- value
+      }
     }
     data
   }

@@ -89,7 +89,40 @@ test_that("validate_fields handles biosample attributes", {
 })
 
 test_that("validate_fields handles library metadata", {
-  testthat::fail("test not yet implemented")
+  # This default has blanks for mandatory fields.  There should be a warning
+  # raised and an entry in the returned vector for each one.
+  sample_attrs <- setup_sra_table()
+  col_pairs <- c(title = "sample_name")
+  constants <- c(platform = "ILLUMINA")
+  metadata <- build_metadata(sample_attrs = sample_attrs,
+                             col_pairs = col_pairs,
+                             constants = constants)
+  expect_warning(problems <- validate_fields(metadata))
+  mf <- attributes(metadata)$mandatory_fields
+  blnks <- mf[sapply(mf, function(f) any(blank(metadata[[f]])))]
+  blnks <- blnks[! blnks %in% c("biosample_accession", "bioproject_accession")]
+  problems_expected <- paste("Mandatory field is missing values:", blnks)
+  expect_equal(problems, problems_expected)
+  # What if a mandatory column is completely missing?  Should be the same
+  # result.
+  metadata$instrument_model <- NULL
+  expect_warning(problems <- validate_fields(metadata))
+  expect_equal(problems, problems_expected)
+  # And if we have text in all the mandatory fields?
+  sample_attrs$filename <- paste0(sample_attrs$sample_name, ".fastq")
+  col_pairs["library_ID"] <- "sample_name"
+  constants["library_strategy"]  <- "OTHER"
+  constants["library_source"]    <- "OTHER"
+  constants["library_selection"] <- "RANDOM"
+  constants["library_layout"]    <- "Paired"
+  constants["instrument_model"]  <- "Illumina MiSeq"
+  constants["filetype"]          <- "fastq"
+  metadata <- build_metadata(sample_attrs = sample_attrs,
+                             col_pairs = col_pairs,
+                             constants = constants)
+  metadata <- fill_blanks(mf, metadata)
+  problems <- validate_fields(metadata)
+  expect_null(problems)
 })
 
 test_that("validate_fields handles generic data frame", {
@@ -130,15 +163,36 @@ test_that("validate_fields can skip warnings", {
 
 
 test_that("fill_blanks fills blank values in data frame", {
-  testthat::fail("test not yet implemented")
+  data <- data.frame(A=c("a", "b", "", "c", NA),
+                     B=c("a", "b", "", "c", NA),
+                     stringsAsFactors = FALSE)
+  result_expected <- data.frame(A=c("a", "b", "missing", "c", "missing"),
+                                B=c("a", "b", "missing", "c", "missing"),
+                                stringsAsFactors = FALSE)
+  result_observed <- fill_blanks(colnames(data), data)
+  expect_equal(result_observed, result_expected)
 })
 
 test_that("fill_blanks fills blank values in vector", {
-  testthat::fail("test not yet implemented")
+  vec <- c("a", "b", "", "c", NA)
+  result_expected <- c("a", "b", "missing", "c", "missing")
+  result_observed <- fill_blanks(vec)
+  expect_equal(result_observed, result_expected)
 })
 
 test_that("fill_blanks warns of unknown blank text", {
-  testthat::fail("test not yet implemented")
+  vec <- c("a", "b", "", "c", NA)
+  result_expected <- c("a", "b", "default", "c", "default")
+  expect_warning(result_observed <- fill_blanks(vec, value = "default"))
+  expect_equal(result_observed, result_expected)
+})
+
+test_that("fill_blanks ignores factors", {
+  data <- data.frame(A=c("a", "b", "", "c", NA),
+                     B=c("a", "b", "", "c", NA))
+  result_expected <- data
+  result_observed <- fill_blanks(colnames(data), data)
+  expect_equal(result_observed, result_expected)
 })
 
 
@@ -146,5 +200,7 @@ test_that("fill_blanks warns of unknown blank text", {
 
 
 test_that("blank reports NA or empty string as blank", {
-  testthat::fail("test not yet implemented")
+  result_expected <-       c(TRUE, TRUE, FALSE)
+  result_observed <- blank(c("",   NA,   "text"))
+  expect_equal(result_observed, result_expected)
 })
