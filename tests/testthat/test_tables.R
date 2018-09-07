@@ -17,13 +17,15 @@ test_that("read_sra_table can read all template files", {
 })
 
 test_that("read_sra_table reads a Run Info table", {
-  fp <- system.file("exdata", "examples", "SraRunTable.txt", package = "srahelper")
+  testthat::skip("test not yet implemented")
+  fp <- system.file("exdata", "examples", "SraRunTable.txt",
+                    package = "srahelper")
   data <- read_sra_table(fp)
-  testthat::fail("test not yet implemented")
 })
 
 
 # write_sra_table ---------------------------------------------------------
+
 
 test_that("write_sra_table writes SRA fields", {
   # Test write_sra_table alongside read_sra_table by ensuring they match.
@@ -162,8 +164,15 @@ test_that("validate_fields checks instrument model and platform", {
 
 test_that("validate_fields warns about sample uniqueness", {
   # SRA will refuse biosample metadata that it doesn't think distinguishes
-  # samples well enough.  What were those rules, again?
-  testthat::fail("test not yet implemented")
+  # samples well enough.
+  biosamples <- setup_biosamples()
+  mf <- attributes(biosamples)$mandatory_fields
+  biosamples <- setup_biosamples()
+  biosamples <- fill_blanks(mf, biosamples)
+  biosamples$host <- 1
+  expect_warning(problems <- validate_fields(biosamples))
+  expect_equal(problems,
+               "Multiple BioSamples cannot have identical attributes")
 })
 
 test_that("validate_fields can skip warnings", {

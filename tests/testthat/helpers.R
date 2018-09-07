@@ -13,5 +13,6 @@ setup_biosamples <- function(submission = "SUB") {
                                                sample_attrs = sample_attrs,
                                                submission = submission)
   biosamples <- tidy_optional_fields(biosamples)
+  biosamples$host <- 1:nrow(biosamples)
   biosamples
 }

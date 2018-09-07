@@ -84,7 +84,24 @@ read_sra_table <- function(fp, ...) {
 #' @return character vector of warnings
 #' @export
 validate_fields <- function(data, quiet=FALSE) {
-  problems <- character()
+  problems <- validate_mandatory_fields(data)
+  problems <- validate_filenames(data, problems)
+  problems <- validate_hardware(data, problems)
+  problems <- validate_uniqueness(data, problems)
+
+  # TODO validate other specific columns:
+  # collection_date
+  # ...?
+  if (! quiet) {
+    for (p in problems) {
+      warning(p)
+    }
+  }
+
+  return(invisible(problems))
+}
+
+validate_mandatory_fields <- function(data, problems=character()) {
   all_blank_ok <- c("biosample_accession", "bioproject_accession")
   # Mandatory fields, as identified by an attribute attached to the data frame.
   if ("mandatory_fields" %in% names(attributes(data))) {
@@ -101,13 +118,20 @@ validate_fields <- function(data, quiet=FALSE) {
       }
     }
   }
-  # Filename columns
+  problems
+}
+
+validate_filenames <- function(data, problems=character()) {
   columns <- grep("^filename[0-9]*$", colnames(data), value=TRUE)
   for (column in columns) {
     if (any(basename(data[[column]]) != data[[column]]))
       problems <- c(problems,
                     paste("Filename column contains directory paths:", column))
   }
+  problems
+}
+
+validate_hardware <- function(data, problems=character()) {
   platform <- data[["platform"]]
   instrument_model <- data[["instrument_model"]]
   hardware_mismatch <- FALSE
@@ -138,17 +162,36 @@ validate_fields <- function(data, quiet=FALSE) {
                     "Mismatched instrument_model and platform values")
     }
   }
+  problems
+}
 
-  # TODO validate other specific columns:
-  # collection_date
-  # ...?
-  if (! quiet) {
-    for (p in problems) {
-      warning(p)
+validate_uniqueness <- function(data, problems=character()) {
+  # "You should have one BioSample for each specimen, and each of your BioSamples
+  # must have differentiating information (excluding sample name, title,
+  # bioproject accession and description). This check was implemented to
+  # encourage submitters to include distinguishing information in their samples.
+  # If the distinguishing information is in the sample name, title or
+  # description, please recode it into an appropriate attribute, either one of
+  # the predefined attributes or a custom attribute you define. If it is
+  # necessary to represent true biological replicates as separate BioSamples,
+  # you might add an 'aliquot' or 'replicate' attribute, e.g., 'replicate =
+  # biological replicate 1', as appropriate. Note that multiple assay types,
+  # e.g., RNA-seq and ChIP-seq data may reference the same BioSample if
+  # appropriate."
+  if ("sample_name" %in% attributes(data)$mandatory_fields) {
+    cols_ignore <- c("sample_name",
+                     "title",
+                     "bioproject_accession",
+                     "description")
+    cols_idx <- match(cols_ignore, colnames(data), nomatch = 0)
+    data2 <- data[, -cols_idx]
+    keys <- do.call(paste, data2)
+    if (length(keys) != length(unique(keys))) {
+      problems <- c(problems,
+                    "Multiple BioSamples cannot have identical attributes")
     }
   }
-
-  return(invisible(problems))
+  problems
 }
 
 #' Check for blank cells
