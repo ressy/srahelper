@@ -34,7 +34,8 @@ build_biosamples_from_template <- function(template_name,
   biosamples <- as.data.frame(matrix((1:len)*NA, nrow = nrow(sample_attrs)))
   colnames(biosamples) <- colnames(template)
   for (j in 1:ncol(template)) {
-    biosamples[[j]] <- as(biosamples[[j]], class(template[[j]]))
+    biosamples[[j]] <- methods::as(biosamples[[j]],
+                                   class(template[[j]]))
   }
   # Add object attributes from template
   for (a in names(attributes(template))) {

@@ -1,5 +1,7 @@
 # SRA Helper
 
+[![Travis Build Status](https://travis-ci.org/ressy/srahelper.svg?branch=master)](https://travis-ci.org/ressy/srahelper)
+
 An R package to assist with preparing [NCBI SRA](https://www.ncbi.nlm.nih.gov/sra)
 submissions and wrangling SRA accessions, files, and metadata. (This is not an
 API for accessing live SRA data.)
