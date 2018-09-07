@@ -7,7 +7,7 @@ context("Test SRA template functions")
 test_that("list_templates lists templates installed", {
   templates <- list_templates()
   templates2 <- list_templates("biosample_attributes")
-  expect_equal(length(templates), 4)
+  expect_equal(length(templates), 15)
   expect_true("MIGS.ba.human-associated.4.0" %in% templates)
   expect_identical(templates, templates2)
 })
