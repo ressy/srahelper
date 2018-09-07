@@ -159,3 +159,22 @@ FIXED_VOCABULARY <- list(
     "Paired"
   )
 )
+
+# https://submit.ncbi.nlm.nih.gov/api/2.0/docs/ ?
+
+TEMPLATES = c(
+  # Pathogen affecting public health
+  "Pathogen.cl.1.0", # Clinical or host-associated pathogen
+  "Pathogen.env.1.0", # Environmental, food or other pathogen
+  "Pathogen.combined.1.0", # Combined pathogen submission
+
+  "Microbe.1.0", # Microbe
+  "Model.organism.animal.1.0", # Model organism or animal sample
+  "Metagenome.environmental.1.0", # Metagenome or environmental sample
+  "Invertebrate.1.0", # Invertebrate
+  "Human.1.0", # Human sample
+  "Plant.1.0", # Plant sample
+  "Virus.1.0", # Virus sample
+  # TODO Genome, metagenome or marker sequences (MIxS compliant)
+  "Beta-lactamase.1.0" # Beta-lactamase
+)

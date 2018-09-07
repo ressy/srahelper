@@ -103,5 +103,16 @@ download_template <- function(template_name) {
     chunk <- readChar(con, N)
   }
   close(con)
+  # Remove leading space
+  txt <- sub("^ +", "", txt)
   txt
+}
+
+dump_templates <- function(template_names = TEMPLATES, dp=".") {
+  templates <- lapply(template_names, download_template)
+  names(templates) <- TEMPLATES
+  for (tn in TEMPLATES) {
+    fp <- file.path(dp, paste0(tn, ".tsv"))
+    writeChar(templates[[tn]], fp, eos=NULL)
+  }
 }
