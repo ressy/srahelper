@@ -84,6 +84,53 @@ write_biosamples <- function(data, ...) {
   write_sra_table(data, fp, ...)
 }
 
+
+# BioSample Package / Template Info ---------------------------------------
+
+
+# download and save all metadata to the package's extdata directory.
+dump_metadata <- function(dp=NULL) {
+  if (is.null(dp)) {
+    dp <- system.file("extdata", package = methods::getPackageName())
+  }
+  biosample_packages <- download_biosample_packages()
+  write_sra_table(biosample_packages,
+                  fp = file.path(dp, "biosample_packages.tsv"))
+  dump_templates(biosample_packages,
+                 dp = file.path(dp, "templates", "biosample_attributes"))
+}
+
+
+#' Download BioSample Package Information
+#'
+#' Download an XML file of BioSample Package information (including template
+#' names) and return a data frame.
+#'
+#' @return data frame of information for all available BioSample types.
+#'
+#' @export
+download_biosample_packages <- function() {
+  url_xml <- paste0("https://",
+                    HTTP_SRV["WWW"],
+                    "/biosample/docs/packages/?format=xml")
+  x <- xml2::xml_children(xml2::read_xml(url_xml))
+  columns <- c("Name", "DisplayName", "ShortName", "EnvPackage",
+               "EnvPackageDisplay", "Description", "Example")
+  names(columns) <- columns
+  data <- lapply(columns, function(column) xml2::xml_text(xml2::xml_child(x, column)))
+  data <- do.call(cbind.data.frame, c(data,list(stringsAsFactors = FALSE)))
+  data
+}
+
+dump_templates <- function(biosample_packages, dp) {
+  templates <- lapply(biosample_packages$Name, download_template)
+  names(templates) <- biosample_packages$Name
+  for (tn in biosample_packages$Name) {
+    fp <- file.path(dp, paste0(tn, ".tsv"))
+    writeChar(templates[[tn]], fp, eos=NULL)
+  }
+}
+
 download_template <- function(package_name) {
   args <- c(package=package_name, action="download_tsv") # or download_excel
   url_args <- paste(names(args), args,
@@ -102,13 +149,4 @@ download_template <- function(package_name) {
   # Remove leading space
   txt <- sub("^ +", "", txt)
   txt
-}
-
-dump_templates <- function(biosample_packages = BIOSAMPLE_PACKAGES, dp=".") {
-  templates <- lapply(biosample_packages$Name, download_template)
-  names(templates) <- biosample_packages$Name
-  for (tn in biosample_packages$Name) {
-    fp <- file.path(dp, paste0(tn, ".tsv"))
-    writeChar(templates[[tn]], fp, eos=NULL)
-  }
 }
