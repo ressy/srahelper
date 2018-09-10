@@ -88,16 +88,39 @@ write_biosamples <- function(data, ...) {
 # BioSample Package / Template Info ---------------------------------------
 
 
-# download and save all metadata to the package's extdata directory.
+#' Download SRA BioSample Metadata
+#'
+#' Download all available BioSample package and template information and save to
+#' a given directory.
+#'
+#' @param dp directory path to save files to.  If not specified, the extdata
+#'   subdirectory of the package location will be used.
+#'
+#' @return data frame of information for all available BioSample types.
+#'
+#' @export
 dump_metadata <- function(dp=NULL) {
   if (is.null(dp)) {
     dp <- system.file("extdata", package = methods::getPackageName())
   }
+  if (! dir.exists(dp)) {
+    dir.create(dp, recursive = TRUE)
+  }
+  # Download BioSample Package data
   biosample_packages <- download_biosample_packages()
   write_sra_table(biosample_packages,
                   fp = file.path(dp, "biosample_packages.tsv"))
-  dump_templates(biosample_packages,
-                 dp = file.path(dp, "templates", "biosample_attributes"))
+  dp_templates <- file.path(dp, "templates", "biosample_attributes")
+  if (! dir.exists(dp_templates)) {
+    dir.create(dp_templates, recursive = TRUE)
+  }
+  # Download BioSample Template files
+  templates <- lapply(biosample_packages$Name, download_template)
+  names(templates) <- biosample_packages$Name
+  for (tn in biosample_packages$Name) {
+    fp <- file.path(dp_templates, paste0(tn, ".tsv"))
+    writeChar(templates[[tn]], fp, eos=NULL)
+  }
 }
 
 
@@ -122,15 +145,13 @@ download_biosample_packages <- function() {
   data
 }
 
-dump_templates <- function(biosample_packages, dp) {
-  templates <- lapply(biosample_packages$Name, download_template)
-  names(templates) <- biosample_packages$Name
-  for (tn in biosample_packages$Name) {
-    fp <- file.path(dp, paste0(tn, ".tsv"))
-    writeChar(templates[[tn]], fp, eos=NULL)
-  }
-}
-
+#' Download BioSample Template
+#'
+#' Download a BioSample template as a TSV file and return the text.
+#'
+#' @return text of TSV template
+#'
+#' @export
 download_template <- function(package_name) {
   args <- c(package=package_name, action="download_tsv") # or download_excel
   url_args <- paste(names(args), args,
