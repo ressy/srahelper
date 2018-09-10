@@ -4,7 +4,7 @@ context("Test general SRA table and field functions")
 
 
 test_that("read_sra_table can read all template files", {
-  dp_templates <- system.file("exdata", "templates", "biosample_attributes",
+  dp_templates <- system.file("extdata", "templates", "biosample_attributes",
                               package = "srahelper")
   fps <- list.files(dp_templates, full.names = TRUE)
   mds <- lapply(fps, read_sra_table)
@@ -18,7 +18,7 @@ test_that("read_sra_table can read all template files", {
 
 test_that("read_sra_table reads a Run Info table", {
   testthat::skip("test not yet implemented")
-  fp <- system.file("exdata", "examples", "SraRunTable.txt",
+  fp <- system.file("extdata", "examples", "SraRunTable.txt",
                     package = "srahelper")
   data <- read_sra_table(fp)
 })

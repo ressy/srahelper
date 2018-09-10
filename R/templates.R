@@ -19,7 +19,7 @@ read_template <- function(template_name,
   } else if (! template_name %in% list_templates(template_type)) {
     warning(paste("Template name not recognzied:", template_name))
   }
-  fp <- system.file("exdata", "templates", template_type,
+  fp <- system.file("extdata", "templates", template_type,
                     paste(template_name, "tsv", sep = "."),
                     package = methods::getPackageName())
   data <- read_sra_table(fp)
@@ -43,7 +43,7 @@ list_templates <- function(template_type="biosample_attributes") {
   if (! template_type %in% list_template_types()) {
     warning(paste("Template type not recognized:", template_type))
   }
-  dp <- system.file("exdata", "templates", template_type,
+  dp <- system.file("extdata", "templates", template_type,
                     package = methods::getPackageName())
   fps <- list.files(dp)
   gsub("\\.tsv$", "", fps)
@@ -51,12 +51,12 @@ list_templates <- function(template_type="biosample_attributes") {
 
 #' List template types
 #'
-#' List types of SRA templates recognized.
+#' List types of SRA templates installed.
 #'
 #' @return vector of template type names.
 #' @export
 list_template_types <- function() {
-  dp <- system.file("exdata", "templates",
+  dp <- system.file("extdata", "templates",
                     package = methods::getPackageName())
   fps <- list.files(dp, full.names = TRUE)
   fps <- basename(fps[sapply(fps, dir.exists)])

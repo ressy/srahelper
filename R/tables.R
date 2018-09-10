@@ -84,6 +84,7 @@ read_sra_table <- function(fp, ...) {
 #' @return character vector of warnings
 #' @export
 validate_fields <- function(data, quiet=FALSE) {
+  # https://www.ncbi.nlm.nih.gov/biosample/docs/submission/validation/
   problems <- validate_mandatory_fields(data)
   problems <- validate_filenames(data, problems)
   problems <- validate_hardware(data, problems)

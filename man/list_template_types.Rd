@@ -10,5 +10,5 @@ list_template_types()
 vector of template type names.
 }
 \description{
-List types of SRA templates recognized.
+List types of SRA templates installed.
 }

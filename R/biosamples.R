@@ -84,17 +84,12 @@ write_biosamples <- function(data, ...) {
   write_sra_table(data, fp, ...)
 }
 
-# Package MIMS: metagenome/environmental, human-associated; version 4.0
-# https://submit.ncbi.nlm.nih.gov/biosample/template/?package=MIMS.me.human-associated.4.0&action=definition
-# Example sample: SAMN02808661
-
-download_template <- function(template_name) {
-  HTTP_SRV = "https://submit.ncbi.nlm.nih.gov"
-  args <- c(package=template_name, action="download_tsv") # or download_excel
+download_template <- function(package_name) {
+  args <- c(package=package_name, action="download_tsv") # or download_excel
   url_args <- paste(names(args), args,
                     sep = "=",
                     collapse = "&")
-  url <- paste0(HTTP_SRV, "/biosample/template/?", url_args)
+  url <- paste0("https://", HTTP_SRV["SUBMIT"], "/biosample/template/?", url_args)
   con <- file(url, "r")
   txt <- ""
   N <- 1024*1024
@@ -109,10 +104,10 @@ download_template <- function(template_name) {
   txt
 }
 
-dump_templates <- function(template_names = TEMPLATES, dp=".") {
-  templates <- lapply(template_names, download_template)
-  names(templates) <- TEMPLATES
-  for (tn in TEMPLATES) {
+dump_templates <- function(biosample_packages = BIOSAMPLE_PACKAGES, dp=".") {
+  templates <- lapply(biosample_packages$Name, download_template)
+  names(templates) <- biosample_packages$Name
+  for (tn in biosample_packages$Name) {
     fp <- file.path(dp, paste0(tn, ".tsv"))
     writeChar(templates[[tn]], fp, eos=NULL)
   }

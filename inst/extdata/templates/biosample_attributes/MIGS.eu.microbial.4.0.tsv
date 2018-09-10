@@ -1,0 +1,13 @@
+# This is a submission template for batch deposit of 'MIGS: eukaryote, microbial; version 4.0' samples to the NCBI BioSample database (http://www.ncbi.nlm.nih.gov/biosample/).
+# See SAMN02639477 for an example record of this type of BioSample (http://www.ncbi.nlm.nih.gov/biosample/SAMN02639477).
+# Fields with an asterisk (*) are mandatory. Your submission will fail if any mandatory fields are not completed. If information is unavailable for any mandatory field, please enter 'not collected', 'not applicable' or 'missing' as appropriate.
+# All other fields are optional. Leave optional fields empty if no information is available.
+# You can add any number of custom fields to fully describe your BioSamples, simply include them in the table.
+# CAUTION: Be aware that Excel may automatically apply formatting to your data. In particular, take care with dates, incrementing autofills and special characters like / or -. Doublecheck that your text file is accurate before uploading to BioSample.
+# TO MAKE A SUBMISSION:
+#     1. Complete the template table (typically in Excel, or another spreadsheet application)
+#     2. Save the worksheet as a Text (Tab-delimited) file - use 'File, Save as, Save as type: Text (Tab-delimited)'
+#     3. Upload the file on the 'Attributes' tab of the BioSample Submission Portal at https://submit.ncbi.nlm.nih.gov/subs/biosample/.
+#     4. If you have any questions, please contact us at biosamplehelp@ncbi.nlm.nih.gov.
+*sample_name	sample_title	bioproject_accession	*organism	strain	isolate	cultivar	ecotype	*collection_date	*depth	*elev	*env_biome	*env_feature	*env_material	*estimated_size	*geo_loc_name	*isol_growth_condt	*lat_lon	*num_replicons	*ploidy	*propagation	alkalinity	alkyl_diethers	altitude	aminopept_act	ammonium	bacteria_carb_prod	biomass	biotic_relationship	bishomohopanol	bromide	calcium	carb_nitro_ratio	chem_administration	chloride	chlorophyll	diether_lipids	diss_carb_dioxide	diss_hydrogen	diss_inorg_carb	diss_org_carb	diss_org_nitro	diss_oxygen	extrachrom_elements	glucosidase_act	health_state	host	host_taxid	isolation_source	magnesium	mean_frict_vel	mean_peak_frict_vel	methane	misc_param	n_alkanes	nitrate	nitrite	nitro	org_carb	org_matter	org_nitro	organism_count	oxy_stat_samp	part_org_carb	pathogenicity	perturbation	petroleum_hydrocarb	ph	phaeopigments	phosphate	phosplipid_fatt_acid	potassium	pressure	redox_potential	ref_biomaterial	salinity	samp_collect_device	samp_mat_process	samp_size	samp_store_dur	samp_store_loc	samp_store_temp	samp_vol_we_dna_ext	silicate	sodium	source_material_id	subspecf_gen_lin	sulfate	sulfide	temp	tot_carb	tot_nitro	tot_org_carb	trophic_level	turbidity	water_content	description
+

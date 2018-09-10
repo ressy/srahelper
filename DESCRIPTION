@@ -11,6 +11,7 @@ LazyData: true
 RoxygenNote: 6.1.0
 Imports:
   methods,
+  xml2 (>= 1.2.0),
   dnar (>= 0.1)
 Remotes:
   github::sherrillmix/dnar

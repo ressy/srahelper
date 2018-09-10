@@ -1,3 +1,5 @@
+# https://submit.ncbi.nlm.nih.gov/api/2.0/docs/ ?
+
 #' SRA empty field values
 #'
 #' These strings are listed in the SRA docs as options for data not present even
@@ -7,6 +9,12 @@
 BLANK_TYPES <- c('not collected',
                  'not applicable',
                  'missing')
+
+HTTP_SRV = c(
+    SUBMIT = "submit.ncbi.nlm.nih.gov",
+    WWW    =  "www.ncbi.nlm.nih.gov"
+  )
+
 
 #' Metadata fields with restricted values
 #'
@@ -160,21 +168,64 @@ FIXED_VOCABULARY <- list(
   )
 )
 
-# https://submit.ncbi.nlm.nih.gov/api/2.0/docs/ ?
-
+# TODO subsume all TEMPLATE stuff into BIOSAMPLE_PACKAGES instead.
 TEMPLATES = c(
-  # Pathogen affecting public health
-  "Pathogen.cl.1.0", # Clinical or host-associated pathogen
-  "Pathogen.env.1.0", # Environmental, food or other pathogen
-  "Pathogen.combined.1.0", # Combined pathogen submission
-
-  "Microbe.1.0", # Microbe
-  "Model.organism.animal.1.0", # Model organism or animal sample
-  "Metagenome.environmental.1.0", # Metagenome or environmental sample
-  "Invertebrate.1.0", # Invertebrate
-  "Human.1.0", # Human sample
-  "Plant.1.0", # Plant sample
-  "Virus.1.0", # Virus sample
+  "Pathogen: clinical or host-associated; version 1.0" = "Pathogen.cl.1.0",
+  "Pathogen: environmental/food/other; version 1.0" = "Pathogen.env.1.0",
+  "Pathogen: combined; version 1.0" = "Pathogen.combined.1.0",
+  "Microbe; version 1.0" = "Microbe.1.0",
+  "Model organism or animal; version 1.0" = "Model.organism.animal.1.0",
+  "Metagenome or environmental; version 1.0" = "Metagenome.environmental.1.0",
+  "Invertebrate; version 1.0" = "Invertebrate.1.0",
+  "Human; version 1.0" = "Human.1.0",
+  "Plant; version 1.0" = "Plant.1.0",
+  "Virus; version 1.0" = "Virus.1.0",
   # TODO Genome, metagenome or marker sequences (MIxS compliant)
-  "Beta-lactamase.1.0" # Beta-lactamase
+  "MIMS: metagenome/environmental, air; version 4.0" = "MIMS.me.air.4.0",
+  "MIMS: metagenome/environmental, built; version 4.0" = "MIMS.me.built.4.0",
+  "MIMS: metagenome/environmental, host-associated; version 4.0" = "MIMS.me.host-associated.4.0",
+  "MIMS: metagenome/environmental, human-associated; version 4.0" = "MIMS.me.human-associated.4.0",
+  "MIMS: metagenome/environmental, human-gut; version 4.0" = "MIMS.me.human-gut.4.0",
+  "MIMS: metagenome/environmental, human-oral; version 4.0" = "MIMS.me.human-oral.4.0",
+  "MIMS: metagenome/environmental, human-skin; version 4.0" = "MIMS.me.human-skin.4.0",
+  "MIMS: metagenome/environmental, human-vaginal; version 4.0" = "MIMS.me.human-vaginal.4.0",
+  "MIMS: metagenome/environmental, microbial; version 4.0" = "MIMS.me.microbial.4.0",
+  "MIMS: metagenome/environmental, miscellaneous; version 4.0" = "MIMS.me.miscellaneous.4.0",
+  "MIMS: metagenome/environmental, plant-associated; version 4.0" = "MIMS.me.plant-associated.4.0",
+  "MIMS: metagenome/environmental, sediment; version 4.0" = "MIMS.me.sediment.4.0",
+  "MIMS: metagenome/environmental, soil; version 4.0" = "MIMS.me.soil.4.0",
+  "MIMS: metagenome/environmental, wastewater; version 4.0" = "MIMS.me.wastewater.4.0",
+  "MIMS: metagenome/environmental, water; version 4.0" = "MIMS.me.water.4.0",
+
+  "Beta-lactamase; version 1.0" = "Beta-lactamase.1.0"
 )
+
+
+#' Download BioSample Pakage Information
+#'
+#' Download an XML file of BioSample Package information (including template
+#' names) and return a data frame.
+#'
+#' @return data frame of information for all available BioSample types.
+#'
+#' @export
+download_biosample_packages <- function() {
+  url_xml <- paste0("https://",
+                    HTTP_SRV["WWW"],
+                    "/biosample/docs/packages/?format=xml")
+  x <- xml2::xml_children(xml2::read_xml(url_xml))
+  columns <- c("Name", "DisplayName", "ShortName", "EnvPackage",
+               "EnvPackageDisplay", "Description", "Example")
+  names(columns) <- columns
+  data <- lapply(columns, function(column) xml2::xml_text(xml2::xml_child(x, column)))
+  data <- do.call(cbind.data.frame, c(data,list(stringsAsFactors = FALSE)))
+  data
+}
+
+#' An included table of BioSample Package information.
+#'
+#' See \code{\link{download_biosample_packages}} to get a fresh copy.
+#'
+#' @export
+BIOSAMPLE_PACKAGES <- download_biosample_packages()
+# TODO keep local unless explicitly updating
