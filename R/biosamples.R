@@ -5,7 +5,7 @@
 #' Create a new SRA BioSamples table using a named template and existing sample
 #' attributes.
 #'
-#' @param template_name name of submission type (e.g.,
+#' @param package_name name of BioSample Package for the template to use, (e.g.,
 #'   "MIMS.me.human-associated.4.0")
 #' @param sample_attrs data frame of existing sample metadata to draw from.  Any
 #'   names given in the \code{col_pairs} argument will be used to explicitly map
@@ -22,12 +22,12 @@
 #'
 #' @return data frame with SRA BioSample attributes defined.
 #' @export
-build_biosamples_from_template <- function(template_name,
+build_biosamples_from_template <- function(package_name,
                                            sample_attrs,
                                            submission=NULL,
                                            col_pairs=NULL,
                                            constants=NULL) {
-  template <- read_template(template_name, "biosample_attributes")
+  template <- read_template(package_name, "biosample_attributes")
   # Build biosamples data frame, using rows from sample attributes, columns and
   # column classes from template.
   len <- nrow(sample_attrs)*ncol(template)
@@ -45,7 +45,7 @@ build_biosamples_from_template <- function(template_name,
   if (! is.null(submission)) {
     attr(biosamples, "submission") <- submission
   }
-  attr(biosamples, "template") <- template_name
+  attr(biosamples, "template") <- package_name
   # Match up columns for sample attributes table
   biosamples <- fill_from_columns(biosamples, sample_attrs, col_pairs)
   if (! is.null(constants)) {
@@ -148,6 +148,9 @@ download_biosample_packages <- function() {
 #' Download BioSample Template
 #'
 #' Download a BioSample template as a TSV file and return the text.
+#'
+#' @param package_name name of BioSample Package for the template to download,
+#'   (e.g., "MIMS.me.human-associated.4.0")
 #'
 #' @return text of TSV template
 #'

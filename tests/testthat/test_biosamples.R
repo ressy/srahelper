@@ -7,9 +7,9 @@ context("Test BioSample Attribute functions")
 test_that("build_biosamples_from_template makes attributes data frame", {
   sample_attrs <- setup_sra_table()
   template <- "MIGS.ba.human-associated.4.0"
-  biosamples <- build_biosamples_from_template(template_name = template,
+  biosamples <- build_biosamples_from_template(package_name = template,
                                                sample_attrs = sample_attrs)
-  # test attributes: submission, template_name, mandatory_fields
+  # test attributes: submission, template, mandatory_fields
   expect_equal(attr(biosamples, "submission"), NULL)
   expect_equal(attr(biosamples, "template"), template)
   expect_equal(length(attr(biosamples, "mandatory_fields")), 13)
@@ -21,7 +21,7 @@ test_that("build_biosamples_from_template handles submission", {
   sample_attrs <- setup_sra_table()
   template <- "MIGS.ba.human-associated.4.0"
   sub <- "SUB"
-  biosamples <- build_biosamples_from_template(template_name = template,
+  biosamples <- build_biosamples_from_template(package_name = template,
                                                sample_attrs = sample_attrs,
                                                submission = sub)
   expect_equal(attr(biosamples, "submission"), sub)
@@ -35,7 +35,7 @@ test_that("build_biosamples_from_template supports col_pairs", {
   template <- "MIGS.ba.human-associated.4.0"
   col_pairs <- c(sample_title = "sample_name",
                  sample_thing1 = "sample_thing1")
-  biosamples <- build_biosamples_from_template(template_name = template,
+  biosamples <- build_biosamples_from_template(package_name = template,
                                                sample_attrs = sample_attrs,
                                                col_pairs = col_pairs)
   expect_equal(biosamples$sample_title, sample_attrs$sample_name)
@@ -46,7 +46,7 @@ test_that("build_biosamples_from_template supports constants", {
   sample_attrs <- setup_sra_table()
   template <- "MIGS.ba.human-associated.4.0"
   constants <- c(sample_const = "X")
-  biosamples <- build_biosamples_from_template(template_name = template,
+  biosamples <- build_biosamples_from_template(package_name = template,
                                                sample_attrs = sample_attrs,
                                                constants = constants)
   expect_equal(biosamples$sample_const,
@@ -55,12 +55,12 @@ test_that("build_biosamples_from_template supports constants", {
 
 test_that("build_biosamples_from_template handles unknown template", {
   sample_attrs <- setup_sra_table()
-  template_name <- "non.existent.template"
+  package_name <- "non.existent.template"
   expect_error(
     expect_warning(
-      build_biosamples_from_template(template_name = template_name,
+      build_biosamples_from_template(package_name = package_name,
                                      sample_attrs = sample_attrs),
-      paste("Template name not recognized:", template_name))
+      paste("Template name not recognized:", package_name))
   )
 })
 

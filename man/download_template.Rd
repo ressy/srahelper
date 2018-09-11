@@ -6,6 +6,10 @@
 \usage{
 download_template(package_name)
 }
+\arguments{
+\item{package_name}{name of BioSample Package for the template to download,
+(e.g., "MIMS.me.human-associated.4.0")}
+}
 \value{
 text of TSV template
 }

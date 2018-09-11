@@ -4,11 +4,11 @@
 \alias{build_biosamples_from_template}
 \title{Create BioSamples Table}
 \usage{
-build_biosamples_from_template(template_name, sample_attrs,
+build_biosamples_from_template(package_name, sample_attrs,
   submission = NULL, col_pairs = NULL, constants = NULL)
 }
 \arguments{
-\item{template_name}{name of submission type (e.g.,
+\item{package_name}{name of BioSample Package for the template to use, (e.g.,
 "MIMS.me.human-associated.4.0")}
 
 \item{sample_attrs}{data frame of existing sample metadata to draw from.  Any
