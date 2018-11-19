@@ -1,0 +1,49 @@
+# This is a submission template for batch deposit SRA metadata															
+#All fields are mandatory															
+"#You can add as many files to a sample you wish by adding more columns with headers filename2, filename3,etc"															
+"#File names in the metadata must match the files that are upload, if you are uploading a tar file and you have directories, please specify the directory as part of the file name"															
+"#You can also add custom attributes to your data by adding more columns, the attributes will part of the Run"															
+"# CAUTION: Be aware that Excel may automatically apply formatting to your data. In particular, take care with dates(it is best to format date fields as text), incrementing autofills and special characters like / or -. Doublecheck that your text file is accurate before uploading to SRA."															
+# TO MAKE A SUBMISSION:															
+"#     1. Complete the template table (typically in Excel, or another spreadsheet application)"															
+"#     2. Save the worksheet as a Text (Tab-delimited) file - use 'File, Save as, Save as type: Text (Tab-delimited)'"															
+#     3. Upload the file on the SRA metadata tab of the SRA Submission Portal at https://submit.ncbi.nlm.nih.gov/subs/sra/.															
+"#     4. If you have any questions, please contact us at sra@ncbi.nlm.nih.gov."															
+#															
+#Platform	LS454	OXFORD_NANOPORE	HELICOS	ABI_SOLID	COMPLETE_GENOMICS	PACBIO_SMRT	ION_TORRENT	CAPILLARY			ILLUMINA			BGISEQ	
+#Instrument Models	454 GS	GridION	Helicos HeliScope	AB SOLiD System	Complete Genomics	PacBio RS	Ion Torrent PGM	AB 3730xL Genetic Analyzer			Illumina Genome Analyzer			BGISEQ-500	
+#	454 GS 20	MinION		AB SOLiD System 2.0		PacBio RS II	Ion Torrent Proton	AB 3730 Genetic Analyzer			Illumina Genome Analyzer II				
+#	454 GS FLX	PromethION		AB SOLiD System 3.0		PacBio Sequel	Ion Torrent S5	AB 3500xL Genetic Analyzer			Illumina Genome Analyzer IIx				
+#	454 GS FLX+			AB SOLiD 4 System			Ion Torrent S5 XL	AB 3500 Genetic Analyzer			Illumina HiSeq 2500				
+#	454 GS FLX Titanium			AB SOLiD 4hq System				AB 3130xL Genetic Analyzer			Illumina HiSeq 2000				
+#	454 GS Junior			AB SOLiD PI System				AB 3130 Genetic Analyzer			Illumina HiSeq 1000				
+#				AB 5500 Genetic Analyzer				AB 310 Genetic Analyzer			Illumina MiSeq				
+#				AB 5500xl Genetic Analyzer							Illumina HiScanSQ				
+#				AB 5500x-Wl Genetic Analyzer							NextSeq 500				
+#				AB SOLiD 3 Plus System							HiSeq X Ten				
+#	Strategy										HiSeq X Five				
+#	Value	Description	Value	Description	Value	Description	Value	Description			Illumina HiSeq 1500				
+#	WGA	Random sequencing of the whole genome following non-pcr amplification	CLONE	Genomic clone based (hierarchical) sequencing	MNase-Seq	Direct sequencing following MNase digestion	CTS	Concatenated Tag Sequencing			Illumina HiSeq 3000				
+#	WGS	Random sequencing of the whole genome	POOLCLONE	Shotgun of pooled clones (usually BACs and Fosmids)	DNase-Hypersensitivity	"Sequencing of hypersensitive sites, or segments of open chromatin that are more readily cleaved by DNaseI"	MRE-Seq	Methylation-Sensitive Restriction Enzyme Sequencing strategy			Illumina HiSeq 4000				
+#	WXS	Random sequencing of exonic regions selected from the genome	AMPLICON	Sequencing of overlapping or distinct PCR or RT-PCR products	Bisulfite-Seq	Sequencing following treatment of DNA with bisulfite to convert cytosine residues to uracil depending on methylation status	MeDIP-Seq	Methylated DNA Immunoprecipitation Sequencing strategy			NextSeq 550				
+#	RNA-Seq	Random sequencing of whole transcriptome	CLONEEND	"Clone end (5', 3', or both) sequencing"	Tn-Seq	Sequencing from transposon insertion sites	MBD-Seq	Direct sequencing of methylated fractions sequencing strategy			Illumina MiniSeq 				
+#	miRNA-Seq	Random sequencing of small miRNAs	FINISHING	Sequencing intended to finish (close) gaps in existing coverage	EST	Single pass sequencing of cDNA templates	OTHER	"Library strategy not listed (please include additional info in the ""design description"")"			Illumina NovaSeq 6000				
+#	WCS	Random sequencing of a whole chromosome or other replicon isolated from a genome	ChIP-Seq	Direct sequencing of chromatin immunoprecipitates	FL-cDNA	Full-length sequencing of cDNA templates									
+#	Synthetic-Long-Read								ATAC-seq	Assay for Transposase-Accessible Chromatin (ATAC) strategy is used to study genome-wide chromatin accessibility. alternative method to DNase-seq that uses an engineered Tn5 transposase to cleave DNA and to integrate primer DNA sequences into the cleaved genomic DNA					
+#	Targeted-Capture		SELEX	Systematic Evolution of Ligands by EXponential enrichment	RAD-Seq		Hi-C	"Chromosome Conformation Capture technique where a biotin-labeled nucleotide is incorporated at the ligation junction, enabling selective purification of chimeric DNA ligation junctions followed by deep sequencing"	ChIA-PET	Direct sequencing of proximity-ligated chromatin immunoprecipitates.					
+#	Tethered Chromatin Conformation Capture		ssRNA-seq	strand-specific RNA sequencing	RIP-Seq	"Direct sequencing of RNA immunoprecipitates (includes CLIP-Seq, HITS-CLIP and PAR-CLIP)."	ncRNA-Seq	"Capture of other non-coding RNA types, including post-translation modification types such as snRNA (small nuclear RNA) or snoRNA (small nucleolar RNA), or expression regulation types such as siRNA (small interfering RNA) or piRNA/piwi/RNA (piwi-interacting RNA)."	FAIRE-seq	Formaldehyde Assisted Isolation of Regulatory Elements. reveals regions of open chromatin					
+#															
+#	Source			Selection											
+#	GENOMIC	Genomic DNA (includes PCR products from genomic DNA)	GENOMIC SINGLE CELL	RANDOM	Random selection by shearing or other method	CF-S	Cot-filtered single/low-copy genomic DNA	cDNA	complementary DNA	Restriction Digest	DNA fractionation using restriction enzymes	Padlock probes capture method	Circularized oligonucleotide probes	cDNA_oligo_dT	
+#	TRANSCRIPTOMIC	"Transcription products or non genomic DNA (EST, cDNA, RT-PCR, screened libraries)"	TRANSCRIPTOMIC SINGLE CELL	PCR	Source material was selected by designed primers	CF-M	Cot-filtered moderately repetitive genomic DNA	ChIP	Chromatin immunoprecipitation	5-methylcytidine antibody	Selection of methylated DNA fragments using an antibody raised against 5-methylcytosine or 5-methylcytidine (m5C)	other	"Other library enrichment, screening, or selection process (please include additional info in the “design description”)"	cDNA_randomPriming	
+#	METAGENOMIC	Mixed material from metagenome		RANDOM PCR	Source material was selected by randomly generated primers	CF-H	Cot-filtered highly repetitive genomic DNA	MNase	Micrococcal Nuclease (MNase) digestion	MBD2 protein methyl-CpG binding domain	Enrichment by methyl-CpG binding domain	unspecified	"Library enrichment, screening, or selection is not specified (please include additional info in the “design description”)"	Inverse rRNA	depletion of ribosomal RNA by oligo hybridization.
+#	METATRANSCRIPTOMIC	Transcription products from community targets		RT-PCR	Source material was selected by reverse transcription PCR	CF-T	Cot-filtered theoretical single-copy genomic DNA	DNAse	Deoxyribonuclease (MNase) digestion	CAGE	Cap-analysis gene expression	PolyA		Oligo-dT	enrichment of messenger RNA (mRNA) by hybridization to Oligo-dT.
+#	SYNTHETIC	Synthetic DNA		HMPR	Hypo-methylated partial restriction digest	MDA	Multiple displacement amplification	Hybrid Selection	Selection by hybridization in array or solution	RACE	Rapid Amplification of cDNA Ends			PolyA	PolyA selection or enrichment for messenger RNA (mRNA); should replace cDNA enumeration.
+#	VIRAL RNA	Viral RNA		MF	Methyl Filtrated	MSLL	Methylation Spanning Linking Library	Reduced Representation	"Reproducible genomic subsets, often generated by restriction fragment size selection, containing a manageable number of loci to facilitate re-sampling"	size fractionation	Physical selection of size appropriate targets			repeat fractionation	Selection for less repetitive (and more gene rich) sequence through Cot filtration (CF) or other fractionation techniques based on DNA kinetics.
+#	OTHER	"Other, unspecified, or unknown library source material (please include additional info in the “design description”)"													
+#	Library Layout														
+#	Single	Fragment/single data set													
+#	Paired	Paired-end data set													
+#Example submission	sample_name	bioproject_accession	title	library_ID	design_description	library_strategy	library_source	library_selection	library_layout	platform	instrument_model	filetype	filename1	assembly*	*only required for bam files aligned against NCBI assemblies
+#	mouse	PRJNA212865	Shirahige_Hela	TM-1 5 DPA	anti-CAP-G ChIP DNA from HeLa cells arrested in prometaphase	ChIP-Seq	GENOMIC	ChIP	SINGLE	ILLUMINA	Illumina MiSeq	fastq	SRR1141045_1.fastq		
+sample_name	bioproject_accession	title	library_ID	design_description	library_strategy	library_source	library_selection	library_layout	platform	instrument_model	filetype	filename1	assembly		

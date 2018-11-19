@@ -14,7 +14,7 @@ test_that("list_templates lists templates installed", {
 
 test_that("list_templates lists metadata templates", {
   templates <- list_templates("library_metadata")
-  expect_identical(templates, "SRA_metadata_acc")
+  expect_identical(templates, "SRA_metadata")
 })
 
 test_that("list_templates warns for unknown template type", {
