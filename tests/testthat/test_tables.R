@@ -76,18 +76,20 @@ test_that("validate_fields handles biosample attributes", {
   mf <- attributes(biosamples)$mandatory_fields
   blnks <- mf[sapply(mf, function(f) any(blank(biosamples[[f]])))]
   problems_expected <- paste("Mandatory field is missing values:", blnks)
-  expect_equal(problems, problems_expected)
+  expect_equal(names(attributes(problems)), "fields")
+  expect_equal(length(attributes(problems)[["fields"]]), 11)
+  expect_equivalent(problems, problems_expected)
   # What if a mandatory column is completely missing?  Should be the same
   # result.
   biosamples$organism <- NULL
   expect_warning(problems <- validate_fields(biosamples))
-  expect_equal(problems, problems_expected)
+  expect_equivalent(problems, problems_expected)
   # And if we have text in all the mandatory fields?  For now it should think
   # everything is fine, though really there should be more checks.
   biosamples <- setup_biosamples()
   biosamples <- fill_blanks(mf, biosamples)
   problems <- validate_fields(biosamples)
-  expect_equal(problems, character())
+  expect_equivalent(problems, character())
 })
 
 test_that("validate_fields handles library metadata", {
@@ -104,12 +106,12 @@ test_that("validate_fields handles library metadata", {
   blnks <- mf[sapply(mf, function(f) any(blank(metadata[[f]])))]
   blnks <- blnks[! blnks %in% c("biosample_accession", "bioproject_accession")]
   problems_expected <- paste("Mandatory field is missing values:", blnks)
-  expect_equal(problems, problems_expected)
+  expect_equivalent(problems, problems_expected)
   # What if a mandatory column is completely missing?  Should be the same
   # result.
   metadata$instrument_model <- NULL
   expect_warning(problems <- validate_fields(metadata))
-  expect_equal(problems, problems_expected)
+  expect_equivalent(problems, problems_expected)
   # And if we have text in all the mandatory fields?
   sample_attrs$filename <- paste0(sample_attrs$sample_name, ".fastq")
   col_pairs["library_ID"] <- "sample_name"
@@ -124,7 +126,7 @@ test_that("validate_fields handles library metadata", {
                              constants = constants)
   metadata <- fill_blanks(mf, metadata)
   problems <- validate_fields(metadata)
-  expect_equal(problems, character())
+  expect_equivalent(problems, character())
 })
 
 test_that("validate_fields checks filenames for directories", {
@@ -133,11 +135,11 @@ test_that("validate_fields checks filenames for directories", {
   sra_table <- setup_sra_table()
   sra_table$filename <- paste0(sra_table$sample_name, ".fastq")
   problems <- validate_fields(sra_table)
-  expect_equal(problems, character())
+  expect_equivalent(problems, character())
   sra_table$filename <- file.path("folder", sra_table$filename)
   expect_warning(problems <- validate_fields(sra_table))
   problems_expected <- "Filename column contains directory paths: filename"
-  expect_equal(problems, problems_expected)
+  expect_equivalent(problems, problems_expected)
 })
 
 test_that("validate_fields checks instrument model and platform", {
@@ -147,19 +149,19 @@ test_that("validate_fields checks instrument model and platform", {
   sra_table$platform <- "ILLUMINA"
   sra_table$instrument_model <- "Illumina MiSeq"
   problems <- validate_fields(sra_table)
-  expect_equal(problems, character())
+  expect_equivalent(problems, character())
   # PacBio RS is a valid instrument model but not for ILLUMINA.
   sra_table$instrument_model <- "PacBio RS"
   expect_warning(problems <- validate_fields(sra_table))
-  expect_equal(problems, "Mismatched instrument_model and platform values")
+  expect_equivalent(problems, "Mismatched instrument_model and platform values")
   # These are invalid values for either column.
   sra_table$instrument_model <- "does not exist"
   expect_warning(problems <- validate_fields(sra_table))
-  expect_equal(problems, "Unknown instrument_model values")
+  expect_equivalent(problems, "Unknown instrument_model values")
   sra_table$platform <- "does not exist"
   sra_table$instrument_model <- "PacBio RS"
   expect_warning(problems <- validate_fields(sra_table))
-  expect_equal(problems, "Unknown platform values")
+  expect_equivalent(problems, "Unknown platform values")
 })
 
 test_that("validate_fields warns about sample uniqueness", {
@@ -171,7 +173,7 @@ test_that("validate_fields warns about sample uniqueness", {
   biosamples <- fill_blanks(mf, biosamples)
   biosamples$host <- 1
   expect_warning(problems <- validate_fields(biosamples))
-  expect_equal(problems,
+  expect_equivalent(problems,
                "Multiple BioSamples cannot have identical attributes")
 })
 
@@ -179,9 +181,9 @@ test_that("validate_fields can skip warnings", {
   sra_table <- setup_sra_table()
   sra_table$platform <- "does not exist"
   expect_warning(problems <- validate_fields(sra_table))
-  expect_equal(problems, "Unknown platform values")
+  expect_equivalent(problems, "Unknown platform values")
   problems <- validate_fields(sra_table, quiet = TRUE)
-  expect_equal(problems, "Unknown platform values")
+  expect_equivalent(problems, "Unknown platform values")
 })
 
 

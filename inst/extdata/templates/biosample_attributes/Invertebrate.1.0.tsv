@@ -8,5 +8,5 @@
 #     2. Save the worksheet as a Text (Tab-delimited) file - use 'File, Save as, Save as type: Text (Tab-delimited)'
 #     3. Upload the file on the 'Attributes' tab of the BioSample Submission Portal at https://submit.ncbi.nlm.nih.gov/subs/biosample/.
 #     4. If you have any questions, please contact us at biosamplehelp@ncbi.nlm.nih.gov.
-*sample_name	sample_title	bioproject_accession	*organism	isolate	breed	host	isolation_source	*collection_date	*geo_loc_name	*tissue	age	altitude	biomaterial_provider	collected_by	depth	dev_stage	env_biome	host_tissue_sampled	identified_by	lat_lon	sex	specimen_voucher	temp	description
+*sample_name	sample_title	bioproject_accession	*organism	isolate	breed	host	isolation_source	*collection_date	*geo_loc_name	*tissue	age	altitude	biomaterial_provider	collected_by	depth	dev_stage	env_broad_range	host_tissue_sampled	identified_by	lat_lon	sex	specimen_voucher	temp	description
 

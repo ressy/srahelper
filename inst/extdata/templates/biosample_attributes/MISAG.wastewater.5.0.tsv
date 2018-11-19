@@ -1,4 +1,4 @@
-# This is a submission template for batch deposit of 'Pathogen: combined; version 1.0' samples to the NCBI BioSample database (http://www.ncbi.nlm.nih.gov/biosample/).
+# This is a submission template for batch deposit of 'MISAG: single amplified genome, wastewater; version 5.0' samples to the NCBI BioSample database (http://www.ncbi.nlm.nih.gov/biosample/).
 # Fields with an asterisk (*) are mandatory. Your submission will fail if any mandatory fields are not completed. If information is unavailable for any mandatory field, please enter 'not collected', 'not applicable' or 'missing' as appropriate.
 # All other fields are optional. Leave optional fields empty if no information is available.
 # You can add any number of custom fields to fully describe your BioSamples, simply include them in the table.
@@ -8,5 +8,5 @@
 #     2. Save the worksheet as a Text (Tab-delimited) file - use 'File, Save as, Save as type: Text (Tab-delimited)'
 #     3. Upload the file on the 'Attributes' tab of the BioSample Submission Portal at https://submit.ncbi.nlm.nih.gov/subs/biosample/.
 #     4. If you have any questions, please contact us at biosamplehelp@ncbi.nlm.nih.gov.
-*sample_name	sample_title	bioproject_accession	*attribute_package	*organism	strain	isolate	*collected_by	*collection_date	*geo_loc_name	*isolation_source	*lat_lon	culture_collection	genotype	host	host_age	host_description	host_disease	host_disease_outcome	host_disease_stage	host_health_state	host_sex	host_subject_id	host_tissue_sampled	passage_history	pathotype	serotype	serovar	specimen_voucher	subgroup	subtype	description
+*sample_name	sample_title	bioproject_accession	*organism	*isolate	*collection_date	*env_broad_range	*env_local_range	*env_medium	*geo_loc_name	*isolation_source	*lat_lon	alkalinity	biochem_oxygen_dem	chem_administration	chem_oxygen_dem	depth	efficiency_percent	emulsions	experimental_factor	gaseous_substances	indust_eff_percent	inorg_particles	misc_param	nitrate	omics_observ_id	org_particles	organism_count	oxy_stat_samp	perturbation	ph	phosphate	pre_treatment	primary_treatment	reactor_type	ref_biomaterial	rel_to_oxygen	samp_collect_device	samp_mat_process	samp_salinity	samp_size	samp_store_dur	samp_store_loc	samp_store_temp	samp_vol_we_dna_ext	secondary_treatment	sewage_type	size_frac	sludge_retent_time	sodium	soluble_inorg_mat	soluble_org_mat	source_material_id	suspend_solids	temp	tertiary_treatment	tot_nitro	tot_phosphate	wastewater_type	description
 

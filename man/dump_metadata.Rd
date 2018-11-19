@@ -11,7 +11,7 @@ dump_metadata(dp = NULL)
 subdirectory of the package location will be used.}
 }
 \value{
-data frame of information for all available BioSample types.
+named vector of downloaded file paths.
 }
 \description{
 Download all available BioSample package and template information and save to

@@ -2,14 +2,17 @@
 % Please edit documentation in R/biosamples.R
 \name{download_biosample_packages}
 \alias{download_biosample_packages}
-\title{Download BioSample Package Information}
+\title{Download BioSample Package info XML}
 \usage{
-download_biosample_packages()
+download_biosample_packages(fp = NULL)
+}
+\arguments{
+\item{fp}{file path to write to, or NULL to use a default within the package
+directory.}
 }
 \value{
-data frame of information for all available BioSample types.
+file path written to
 }
 \description{
-Download an XML file of BioSample Package information (including template
-names) and return a data frame.
+Download an XML file of BioSample package information and write to disk.
 }

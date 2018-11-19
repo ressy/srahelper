@@ -4,15 +4,18 @@
 \alias{download_template}
 \title{Download BioSample Template}
 \usage{
-download_template(package_name)
+download_template(package_name, fp = NULL)
 }
 \arguments{
 \item{package_name}{name of BioSample Package for the template to download,
 (e.g., "MIMS.me.human-associated.4.0")}
+
+\item{fp}{file path to write to, or NULL to use a default within the package
+directory.}
 }
 \value{
-text of TSV template
+file path written to
 }
 \description{
-Download a BioSample template as a TSV file and return the text.
+Download a BioSample template as a TSV file.
 }
