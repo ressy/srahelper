@@ -111,3 +111,32 @@ test_that("write_biosamples handles overwrite options", {
   data2 <- read_sra_table(fp)
   expect_equal(data2$sample_name[1], "newname")
 })
+
+
+# field_descriptions ------------------------------------------------------
+
+
+test_that("field_descriptions describes BioSample fields", {
+  fields <- c("env_biome", "env_feature")
+  descs_obs <- as.list(field_descriptions(fields))
+  descs_exp <- list(
+    env_biome = paste("Add terms that identify the major environment type(s)",
+                      "where your sample was collected. Recommend subclasses",
+                      "of biome [ENVO:00000428]. Multiple terms can be",
+                      "separated by one or more pipes e.g.:  mangrove biome",
+                      "[ENVO:01000181]|estuarine biome [ENVO:01000020]"),
+    env_feature = paste("Add terms that identify environmental entities having",
+                        "causal influences upon the entity at time of sampling,",
+                        "multiple terms can be separated by pipes, e.g.: ",
+                        "shoreline [ENVO:00000486]|intertidal zone",
+                        "[ENVO:00000316]")
+    )
+  # There are unicode characters in here.  I'll just strip out any non-ASCII or
+  # spaces.
+  descs_obs[[1]] <- charToRaw(descs_obs[[1]])
+  descs_obs[[2]] <- charToRaw(descs_obs[[2]])
+  descs_exp <- lapply(descs_exp, charToRaw)
+  squash <- function(bytes) bytes[bytes < 0x80 & bytes != 0x20]
+  # close enough!
+  expect_equal(lapply(descs_obs, squash), lapply(descs_exp, squash))
+})
