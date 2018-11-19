@@ -17,6 +17,21 @@ test_that("build_biosamples_from_template makes attributes data frame", {
   expect_equal(biosamples$sample_name, sample_attrs$sample_name)
 })
 
+test_that("build_biosamples_from_template works with display name", {
+  sample_attrs <- setup_sra_table()
+  template <- "MIGS.ba.human-associated.4.0"
+  template_display <- paste("MIGS: cultured bacteria/archaea,",
+                            "human-associated; version 4.0")
+  biosamples <- build_biosamples_from_template(package_name = template_display,
+                                               sample_attrs = sample_attrs)
+  # test attributes: submission, template, mandatory_fields
+  expect_equal(attr(biosamples, "submission"), NULL)
+  expect_equal(attr(biosamples, "template"), template)
+  expect_equal(length(attr(biosamples, "mandatory_fields")), 13)
+  expect_equal(length(attr(biosamples, "optional_fields")), 68)
+  expect_equal(biosamples$sample_name, sample_attrs$sample_name)
+})
+
 test_that("build_biosamples_from_template handles submission", {
   sample_attrs <- setup_sra_table()
   template <- "MIGS.ba.human-associated.4.0"

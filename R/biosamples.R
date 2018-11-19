@@ -5,8 +5,10 @@
 #' Create a new SRA BioSamples table using a named template and existing sample
 #' attributes.
 #'
-#' @param package_name name of BioSample Package for the template to use, (e.g.,
-#'   "MIMS.me.human-associated.4.0")
+#' @param package_name name of BioSample Package for the template to use, as
+#'   either the display name (e.g., "MIGS: cultured bacteria/archaea,
+#'   human-associated; version 4.0") or the short name (e.g.,
+#'   "MIGS.ba.human-associated.4.0")
 #' @param sample_attrs data frame of existing sample metadata to draw from.  Any
 #'   names given in the \code{col_pairs} argument will be used to explicitly map
 #'   column names from the existing data frame to the new data frame.  Remaining
@@ -27,7 +29,19 @@ build_biosamples_from_template <- function(package_name,
                                            submission=NULL,
                                            col_pairs=NULL,
                                            constants=NULL) {
-  template <- read_template(package_name, "biosample_attributes")
+  # Figure out what template to use.  By default try to use the package name
+  # given, and if that isn't found, try using that as a display name (the
+  # long-format one shown on the web pages).  If neither works, warn.
+  template_name <- package_name
+  if (! package_name %in% list_templates()) {
+    pkgs <- read_biosample_packages()
+    template_name <- pkgs[pkgs$DisplayName == package_name, "Name"]
+    if (is.null(template_name)) {
+      warning(paste("Template name not recognzied:", package_name))
+    }
+  }
+  # Read in the relevant template from disk.
+  template <- read_template(template_name, "biosample_attributes")
   # Build biosamples data frame, using rows from sample attributes, columns and
   # column classes from template.
   len <- nrow(sample_attrs)*ncol(template)
@@ -45,7 +59,7 @@ build_biosamples_from_template <- function(package_name,
   if (! is.null(submission)) {
     attr(biosamples, "submission") <- submission
   }
-  attr(biosamples, "template") <- package_name
+  attr(biosamples, "template") <- template_name
   # Match up columns for sample attributes table
   biosamples <- fill_from_columns(biosamples, sample_attrs, col_pairs)
   if (! is.null(constants)) {
