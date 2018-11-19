@@ -90,6 +90,8 @@ validate_fields <- function(data, quiet=FALSE) {
   problems <- validate_hardware(data, problems)
   problems <- validate_uniqueness(data, problems)
 
+  attr(problems, "fields") <- unique(attr(problems, "fields"))
+
   # TODO validate other specific columns:
   # collection_date
   # ...?
@@ -103,6 +105,7 @@ validate_fields <- function(data, quiet=FALSE) {
 }
 
 validate_mandatory_fields <- function(data, problems=character()) {
+  fields <- c()
   all_blank_ok <- c("biosample_accession", "bioproject_accession")
   # Mandatory fields, as identified by an attribute attached to the data frame.
   if ("mandatory_fields" %in% names(attributes(data))) {
@@ -116,23 +119,29 @@ validate_mandatory_fields <- function(data, problems=character()) {
         problems <- c(problems,
                       paste("Mandatory field is missing values:",
                             a))
+        fields <- c(fields, a)
       }
     }
   }
+  attr(problems, "fields") <- fields
   problems
 }
 
 validate_filenames <- function(data, problems=character()) {
+  fields <- attr(problems, "fields")
   columns <- grep("^filename[0-9]*$", colnames(data), value=TRUE)
   for (column in columns) {
     if (any(basename(data[[column]]) != data[[column]]))
       problems <- c(problems,
                     paste("Filename column contains directory paths:", column))
+      fields <- c(fields, column)
   }
+  attr(problems, "fields") <- fields
   problems
 }
 
 validate_hardware <- function(data, problems=character()) {
+  fields <- attr(problems, "fields")
   platform <- data[["platform"]]
   instrument_model <- data[["instrument_model"]]
   hardware_mismatch <- FALSE
@@ -141,6 +150,7 @@ validate_hardware <- function(data, problems=character()) {
       problems <- c(problems,
                     "Unknown platform values")
       hardware_mismatch <- TRUE
+      fields <- c(fields, "platform")
     }
   }
   if (! is.null(instrument_model) && ! all(blank(instrument_model))) {
@@ -149,6 +159,7 @@ validate_hardware <- function(data, problems=character()) {
       problems <- c(problems,
                     "Unknown instrument_model values")
       hardware_mismatch <- TRUE
+      fields <- c(fields, "instrument_model")
     }
   }
   if (! is.null(platform)         && ! all(blank(platform)) &&
@@ -161,8 +172,10 @@ validate_hardware <- function(data, problems=character()) {
     if (! all(ms)) {
       problems <- c(problems,
                     "Mismatched instrument_model and platform values")
+      fields <- c(fields, "platform", "instrument_model")
     }
   }
+  attr(problems, "fields") <- fields
   problems
 }
 
@@ -179,6 +192,7 @@ validate_uniqueness <- function(data, problems=character()) {
   # biological replicate 1', as appropriate. Note that multiple assay types,
   # e.g., RNA-seq and ChIP-seq data may reference the same BioSample if
   # appropriate."
+  fields <- attr(problems, "fields")
   if ("sample_name" %in% attributes(data)$mandatory_fields) {
     cols_ignore <- c("sample_name",
                      "title",
@@ -192,6 +206,7 @@ validate_uniqueness <- function(data, problems=character()) {
                     "Multiple BioSamples cannot have identical attributes")
     }
   }
+  attr(problems, "fields") <- fields
   problems
 }
 
