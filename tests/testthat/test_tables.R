@@ -65,6 +65,25 @@ test_that("write_sra_table handles overwrite options", {
 })
 
 
+
+# check_uniqueness --------------------------------------------------------
+
+test_that("check_uniqueness marks equivalent rows", {
+  data <- data.frame(sample_name = LETTERS[1:4],
+                     description = letters[1:4])
+  u_obs <- check_uniqueness(data)
+  u_exp <- factor(rep("", 4))
+  expect_equal(u_obs, u_exp)
+})
+
+test_that("check_uniqueness marks unique rows", {
+  data <- setup_sra_table()
+  u_obs_int <- as.integer(sort(check_uniqueness(data)))
+  u_exp_int <- 1:5
+  expect_equal(u_obs_int, u_exp_int)
+})
+
+
 # validate_fields ---------------------------------------------------------
 
 
@@ -96,7 +115,7 @@ test_that("validate_fields handles library metadata", {
   # This default has blanks for mandatory fields.  There should be a warning
   # raised and an entry in the returned vector for each one.
   sample_attrs <- setup_sra_table()
-  col_pairs <- c(title = "sample_name")
+  col_pairs <- c(title = "sample_name", library_ID = "sample_thing1")
   constants <- c(platform = "ILLUMINA")
   metadata <- build_metadata(sample_attrs = sample_attrs,
                              col_pairs = col_pairs,
@@ -174,7 +193,7 @@ test_that("validate_fields warns about sample uniqueness", {
   biosamples$host <- 1
   expect_warning(problems <- validate_fields(biosamples))
   expect_equivalent(problems,
-               "Multiple BioSamples cannot have identical attributes")
+               "Multiple entries cannot have identical attributes (see ?check_uniqueness)")
 })
 
 test_that("validate_fields can skip warnings", {

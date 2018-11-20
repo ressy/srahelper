@@ -72,6 +72,42 @@ read_sra_table <- function(fp, ...) {
   data
 }
 
+# make a factor to label each row of input data
+
+#' Check sample uniqueness from metadata
+#'
+#' Per NCBI's rules: "You should have one BioSample for each specimen, and each
+#' of your BioSamples must have differentiating information (excluding sample
+#' name, title, bioproject accession and description). This check was
+#' implemented to encourage submitters to include distinguishing information in
+#' their samples. If the distinguishing information is in the sample name, title
+#' or description, please recode it into an appropriate attribute, either one of
+#' the predefined attributes or a custom attribute you define. If it is
+#' necessary to represent true biological replicates as separate BioSamples, you
+#' might add an 'aliquot' or 'replicate' attribute, e.g., 'replicate =
+#' biological replicate 1', as appropriate. Note that multiple assay types,
+#' e.g., RNA-seq and ChIP-seq data may reference the same BioSample if
+#' appropriate."
+#'
+#' @param data data frame of BioSample attributes
+#'
+#' @return factor with levels corresponding to unique rows after excluding
+#'   certain columns.
+#'
+#' @export
+check_uniqueness <- function(data) {
+  cols_ignore <- c("sample_name",
+                   "title",
+                   "bioproject_accession",
+                   "description")
+  cols_idx <- match(cols_ignore, colnames(data), nomatch = 0)
+  # This ensures that we'll always have as many rows out as went in
+  data2 <- cbind("", data[, -cols_idx, drop = FALSE])
+  key <- do.call(paste, data2)
+  key <- factor(key)
+  key
+}
+
 #' Check SRA fields for problems
 #'
 #' Check a data frame of SRA fields (biosample attributes or library metadata)
@@ -180,30 +216,13 @@ validate_hardware <- function(data, problems=character()) {
 }
 
 validate_uniqueness <- function(data, problems=character()) {
-  # "You should have one BioSample for each specimen, and each of your BioSamples
-  # must have differentiating information (excluding sample name, title,
-  # bioproject accession and description). This check was implemented to
-  # encourage submitters to include distinguishing information in their samples.
-  # If the distinguishing information is in the sample name, title or
-  # description, please recode it into an appropriate attribute, either one of
-  # the predefined attributes or a custom attribute you define. If it is
-  # necessary to represent true biological replicates as separate BioSamples,
-  # you might add an 'aliquot' or 'replicate' attribute, e.g., 'replicate =
-  # biological replicate 1', as appropriate. Note that multiple assay types,
-  # e.g., RNA-seq and ChIP-seq data may reference the same BioSample if
-  # appropriate."
   fields <- attr(problems, "fields")
   if ("sample_name" %in% attributes(data)$mandatory_fields) {
-    cols_ignore <- c("sample_name",
-                     "title",
-                     "bioproject_accession",
-                     "description")
-    cols_idx <- match(cols_ignore, colnames(data), nomatch = 0)
-    data2 <- data[, -cols_idx]
-    keys <- do.call(paste, data2)
+    keys <- check_uniqueness(data)
     if (length(keys) != length(unique(keys))) {
       problems <- c(problems,
-                    "Multiple BioSamples cannot have identical attributes")
+                    paste("Multiple entries cannot have identical",
+                          "attributes (see ?check_uniqueness)"))
     }
   }
   attr(problems, "fields") <- fields
