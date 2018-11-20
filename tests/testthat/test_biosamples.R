@@ -155,3 +155,11 @@ test_that("field_descriptions describes BioSample fields", {
   # close enough!
   expect_equal(lapply(descs_obs, squash), lapply(descs_exp, squash))
 })
+
+test_that("field_descriptions handles missing entries correctly", {
+  # There's no description for the subject_id field
+  fields <- "subject_id"
+  descs_obs <- field_descriptions(fields)
+  descs_exp <- c(subject_id = "")
+  expect_equal(descs_obs, descs_exp)
+})

@@ -69,7 +69,6 @@ build_biosamples_from_template <- function(package_name,
   biosamples
 }
 
-
 #' Write SRA BioSample attributes or metadata to disk
 #'
 #' These functions write SRA spreadsheets to the working directory by type
@@ -117,6 +116,7 @@ write_biosamples <- function(data, ...) {
 #'
 #' @export
 dump_metadata <- function(dp=NULL) {
+  # TODO library metadata be added and this moved elsewhere?
   if (is.null(dp)) {
     dp <- system.file("extdata", package = methods::getPackageName())
   }
@@ -271,6 +271,8 @@ download_template <- function(package_name, fp=NULL) {
 
 # Other -------------------------------------------------------------------
 
+# Also useful: https://www.ncbi.nlm.nih.gov/biosample/docs/submission/validation/
+
 
 #' Get BioSample field descriptions
 #'
@@ -291,9 +293,14 @@ field_descriptions <- function(fields) {
 
   desc <- sapply(fields, function(field) {
     for (attrib in bs_attrs) {
-      if (has_name(field, attrib))
-        return(attrib$metadata$Description)
+      if (has_name(field, attrib)) {
+        d <- attrib$metadata$Description
+        if (is.null(d))
+          d <- ""
+        return(d)
+      }
     }
+    return("")
   })
 
   names(desc) <- fields
