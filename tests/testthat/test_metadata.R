@@ -8,7 +8,7 @@ test_that("build_metadata makes metadata data frame", {
   sample_attrs <- setup_sra_table()
   metadata <- build_metadata(sample_attrs)
   expect_equal(attr(metadata, "submission"), NULL)
-  expect_equal(length(attr(metadata, "mandatory_fields")), 13)
+  expect_equal(length(attr(metadata, "mandatory_fields")), 14)
   expect_equal(nrow(metadata), 5)
 })
 

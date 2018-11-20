@@ -271,8 +271,32 @@ download_template <- function(package_name, fp=NULL) {
 
 # Other -------------------------------------------------------------------
 
+
 # Also useful: https://www.ncbi.nlm.nih.gov/biosample/docs/submission/validation/
 
+#' Remove blank optional fields
+#'
+#' Given a data frame (with optional_fields attribute), remove any columns that
+#' are listed as optional and are entirely blank.  Call this after filling in
+#' any optional fields that you do have information for to clear out the
+#' remaining empty ones.
+#'
+#' @param data data frame of SRA metadata
+#'
+#' @return data frame with blank optional fields removed
+#'
+#' @export
+tidy_optional_fields <- function(data) {
+  fields <- attributes(data)$optional_fields
+  if (! is.null(fields)) {
+    for (f in fields) {
+      if (all(blank(data[[f]]))) {
+        data[[f]] <- NULL
+      }
+    }
+  }
+  data
+}
 
 #' Get BioSample field descriptions
 #'

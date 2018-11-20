@@ -15,8 +15,12 @@ BLANK_TYPES <- c('not collected',
 #' @export
 HTTP_SRV = c(
     SUBMIT = "submit.ncbi.nlm.nih.gov",
-    WWW    =  "www.ncbi.nlm.nih.gov"
+    WWW    = "www.ncbi.nlm.nih.gov"
   )
+
+FTP_SRV = c(
+  TRACE = "ftp-trace.ncbi.nlm.nih.gov"
+)
 
 #' Metadata fields with restricted values
 #'

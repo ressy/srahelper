@@ -60,6 +60,7 @@ build_metadata <- function(sample_attrs,
     title                <- character(N)
     bioproject_accession <- character(N)
     biosample_accession  <- character(N)
+    sample_name          <- character(N)
   })
   metadata <- do.call(data.frame, c(metadata, list(stringsAsFactors=FALSE)))
   metadata <- fill_from_columns(metadata, sample_attrs, col_pairs)
@@ -85,17 +86,31 @@ build_metadata <- function(sample_attrs,
   metadata
 }
 
-# remove any fields that are optional and entirely blank.
-tidy_optional_fields <- function(data) {
-  fields <- attributes(data)$optional_fields
-  if (! is.null(fields)) {
-    for (f in fields) {
-    if (all(blank(data[[f]]))) {
-        data[[f]] <- NULL
-      }
+#' Download Library Metadata Template
+#'
+#' Download the library metadata template as a TSV file.
+#'
+#' @param fp file path to write to, or NULL to use a default within the package
+#'   directory.
+#'
+#' @return file path written to
+#'
+#' @export
+download_metadata <- function(fp=NULL) {
+  url <- paste0("ftp://",
+                FTP_SRV["TRACE"],
+                "/sra/metadata_table/SRA_metadata.tsv")
+  if (is.null(fp)) {
+    dp <- system.file("extdata", package = methods::getPackageName())
+    dp_templates <- file.path(dp, "templates", "library_metadata")
+    if (! dir.exists(dp_templates)) {
+      dir.create(dp_templates, recursive = TRUE)
     }
+    fp <- file.path(dp_templates, "SRA_metadata.tsv")
   }
-  data
+  utils::download.file(url = url, destfile = fp)
+  names(fp) <- "metadata"
+  return(fp)
 }
 
 
@@ -133,7 +148,7 @@ fill_from_columns <- function(data_new, data_old, col_pairs=NULL) {
   # Add any additional entries as extra columns
   if (! is.null(col_pairs)) {
     colnames_extra <- col_pairs[! names(col_pairs) %in% colnames(data_new)]
-    data_new[colnames_extra] <- data_old[colnames_extra]
+    data_new[names(colnames_extra)] <- data_old[colnames_extra]
   }
   data_new
 }
