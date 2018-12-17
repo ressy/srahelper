@@ -120,8 +120,10 @@ test_that("validate_submission handles biosample and metadata attributes", {
   biosamples <- submission$biosamples
   mf <- attributes(biosamples)$mandatory_fields
   blnks <- mf[sapply(mf, function(f) any(blank(biosamples[[f]])))]
-  problems_expected_biosamples <- paste("Mandatory field is missing values:",
-                                        blnks)
+  problems_expected_biosamples <- c(
+    paste("Mandatory field is missing values:", blnks),
+    "Multiple entries cannot have identical attributes (see ?check_uniqueness)"
+    )
   expect_equal(names(attributes(problems$biosamples)), "fields")
   expect_equal(length(attributes(problems$biosamples)[["fields"]]), 11)
   expect_equivalent(problems$biosamples, problems_expected_biosamples)
@@ -167,8 +169,8 @@ test_that("write_submission writes both spreadsheets, no submission set", {
   setwd(dp)
   result <- write_submission(submission)
   result_expected <- list(
-    biosamples = "biosamples.tsv",
-    metadata = "metadata.tsv")
+    biosamples = "./biosamples.tsv",
+    metadata = "./metadata.tsv")
   # We should get the file paths we expect and those files should exist.
   expect_identical(result, result_expected)
   expect_true(all(file.exists(unlist(result))))
@@ -210,16 +212,16 @@ test_that("write_submission splits for too many biosamples", {
   setwd(dp)
   result <- write_submission(submission)
   result_expected <- list(
-    biosamples = c("biosamples_1.tsv", "biosamples_2.tsv"),
-    metadata = c("metadata_1.tsv", "metadata_1.tsv"))
+    biosamples = c("./biosamples_1.tsv", "./biosamples_2.tsv"),
+    metadata = c("./metadata_1.tsv", "./metadata_2.tsv"))
   # We should get the file paths we expect and those files should exist.
   expect_identical(result, result_expected)
   expect_true(all(file.exists(unlist(result))))
   # Number of rows should match up as expected.
-  bs1 <- read.table(result$biosamples[[1]])
-  bs2 <- read.table(result$biosamples[[2]])
-  md1 <- read.table(result$metadata[[1]])
-  md2 <- read.table(result$metadata[[2]])
+  bs1 <- read_sra_table(result$biosamples[[1]])
+  bs2 <- read_sra_table(result$biosamples[[2]])
+  md1 <- read_sra_table(result$metadata[[1]])
+  md2 <- read_sra_table(result$metadata[[2]])
   expect_equal(nrow(bs1), 1000)
   expect_equal(nrow(bs2), 20)
   expect_equal(nrow(md1), 1000)
@@ -237,20 +239,20 @@ test_that("write_submission splits for too many metadata entries", {
   setwd(dp)
   result <- write_submission(submission)
   result_expected <- list(
-    biosamples = "biosamples.tsv",
-    metadata = c("metadata_1.tsv", "metadata_1.tsv"))
+    biosamples = c("./biosamples_1.tsv", "./biosamples_2.tsv"),
+    metadata = c("./metadata_1.tsv", "./metadata_2.tsv"))
   # We should get the file paths we expect and those files should exist.
   expect_identical(result, result_expected)
   expect_true(all(file.exists(unlist(result))))
   # Number of rows should match up as expected.
   # With 300 metadata rows, we should get three samples in one chunk (900 md
   # rows) and two in the other (600 rows).
-  bs1 <- read.table(result$biosamples[[1]])
-  bs2 <- read.table(result$biosamples[[2]])
-  md1 <- read.table(result$metadata[[1]])
-  md2 <- read.table(result$metadata[[2]])
+  bs1 <- read_sra_table(result$biosamples[[1]])
+  bs2 <- read_sra_table(result$biosamples[[2]])
+  md1 <- read_sra_table(result$metadata[[1]])
+  md2 <- read_sra_table(result$metadata[[2]])
   expect_equal(nrow(bs1), 3)
-  expect_equal(nrow(bs1), 2)
+  expect_equal(nrow(bs2), 2)
   expect_equal(nrow(md1), 900)
   expect_equal(nrow(md2), 600)
 
