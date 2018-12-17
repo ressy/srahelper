@@ -114,16 +114,14 @@ test_that("validate_submission handles biosample and metadata attributes", {
                                  biosample_attrs = sample_attrs,
                                  metadata_col_pairs = md_col_pairs,
                                  metadata_constants = md_constants)
+  submission$biosamples$host <- 1:nrow(submission$biosamples)
   expect_warning(problems <- validate_submission(submission))
   # This default has blanks for mandatory fields.  There should be a warning
   # raised and an entry in the returned vector for each one.
   biosamples <- submission$biosamples
   mf <- attributes(biosamples)$mandatory_fields
   blnks <- mf[sapply(mf, function(f) any(blank(biosamples[[f]])))]
-  problems_expected_biosamples <- c(
-    paste("Mandatory field is missing values:", blnks),
-    "Multiple entries cannot have identical attributes (see ?check_uniqueness)"
-    )
+  problems_expected_biosamples <- paste("Mandatory field is missing values:", blnks)
   expect_equal(names(attributes(problems$biosamples)), "fields")
   expect_equal(length(attributes(problems$biosamples)[["fields"]]), 11)
   expect_equivalent(problems$biosamples, problems_expected_biosamples)
@@ -185,8 +183,8 @@ test_that("write_submission handles overwrite options", {
   setwd(dp)
   result <- write_submission(submission)
   result_expected <- list(
-    biosamples = "biosamples.tsv",
-    metadata = "metadata.tsv")
+    biosamples = "./biosamples.tsv",
+    metadata = "./metadata.tsv")
   expect_identical(result, result_expected)
   expect_true(all(file.exists(unlist(result))))
   fp_bs <- result$biosamples
@@ -195,6 +193,7 @@ test_that("write_submission handles overwrite options", {
   expect_error(write_submission(submission),
                paste("Destination file already exists:", fp_bs))
   submission$biosamples$sample_name[1] <- "newname"
+  submission$metadata$sample_name[1]   <- "newname"
   write_submission(submission, overwrite = TRUE)
   data2 <- read_sra_table(fp_bs)
   expect_equal(data2$sample_name[1], "newname")
@@ -255,5 +254,4 @@ test_that("write_submission splits for too many metadata entries", {
   expect_equal(nrow(bs2), 2)
   expect_equal(nrow(md1), 900)
   expect_equal(nrow(md2), 600)
-
 })
