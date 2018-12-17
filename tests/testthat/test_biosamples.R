@@ -10,11 +10,7 @@ test_that("build_biosamples_from_template makes attributes data frame", {
   biosamples <- build_biosamples_from_template(package_name = template,
                                                sample_attrs = sample_attrs)
   # test attributes: submission, template, mandatory_fields
-  expect_equal(attr(biosamples, "submission"), NULL)
-  expect_equal(attr(biosamples, "template"), template)
-  expect_equal(length(attr(biosamples, "mandatory_fields")), 13)
-  expect_equal(length(attr(biosamples, "optional_fields")), 68)
-  expect_equal(biosamples$sample_name, sample_attrs$sample_name)
+  check_biosamples(biosamples, template, sample_attrs)
 })
 
 test_that("build_biosamples_from_template works with display name", {
@@ -25,11 +21,7 @@ test_that("build_biosamples_from_template works with display name", {
   biosamples <- build_biosamples_from_template(package_name = template_display,
                                                sample_attrs = sample_attrs)
   # test attributes: submission, template, mandatory_fields
-  expect_equal(attr(biosamples, "submission"), NULL)
-  expect_equal(attr(biosamples, "template"), template)
-  expect_equal(length(attr(biosamples, "mandatory_fields")), 13)
-  expect_equal(length(attr(biosamples, "optional_fields")), 68)
-  expect_equal(biosamples$sample_name, sample_attrs$sample_name)
+  check_biosamples(biosamples, template, sample_attrs)
 })
 
 test_that("build_biosamples_from_template handles submission", {

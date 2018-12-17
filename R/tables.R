@@ -67,7 +67,7 @@ read_sra_table <- function(fp, ...) {
   data <- process_fixed_vocab(data)
   if ("sample_name" %in% colnames(data)) {
     data[["sample_name"]] <- as.character(data[["sample_name"]])
-    rownames(data) <- make.names(data$sample_name)
+    rownames(data) <- make.names(data$sample_name, unique = TRUE)
   }
   data
 }
