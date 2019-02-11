@@ -6,6 +6,13 @@
 \usage{
 chunk_submission(submission, rowsmax = 1000)
 }
+\arguments{
+\item{submission}{list of submission data, as created by
+\code{\link{build_submission}}.}
+
+\item{rowsmax}{maximum number of rows to be permitted in each chunk
+(spreadsheet).}
+}
 \description{
 The SRA web interface will not allow a spreadsheet to be uploaded that
 contains more than 1000 rows, for both BioSample Attributes and Metadata

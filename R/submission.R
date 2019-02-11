@@ -150,6 +150,11 @@ write_submission <- function(submission, ...) {
 #' output data frames.  The resulting spreadsheets will need to be uploaded in
 #' separate submissions under the same BioProject.  The data frames here will be
 #' organized so a given sample has all of its data in the same "chunk."
+#'
+#' @param submission list of submission data, as created by
+#'   \code{\link{build_submission}}.
+#' @param rowsmax maximum number of rows to be permitted in each chunk
+#'   (spreadsheet).
 chunk_submission <- function(submission, rowsmax=1000) {
   # Get number of md rows for each unique sample name
   # (We'll always have at least one row in the metadata for a given row in the
