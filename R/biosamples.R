@@ -82,19 +82,7 @@ build_biosamples_from_template <- function(package_name,
 #' @export
 #' @describeIn write_biosamples Write SRA BioSample attributes to disk
 write_biosamples <- function(data, ...) {
-  s <- attributes(data)$submission
-  if (! is.null(s)) {
-    dp <- s
-    if (! dir.exists(dp)) {
-      dir.create(dp)
-    }
-    fn <- paste0(s, "_biosamples.tsv")
-  } else {
-    dp <- "."
-    fn <- "biosamples.tsv"
-  }
-  fp <- file.path(dp, fn)
-  write_sra_table(data, fp, ...)
+  write_sra_table(data, fp_suffix = "biosamples", ...)
 }
 
 
