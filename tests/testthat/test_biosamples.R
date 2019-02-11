@@ -125,33 +125,40 @@ test_that("write_biosamples handles overwrite options", {
 
 test_that("field_descriptions describes BioSample fields", {
   fields <- c("env_biome", "env_feature")
-  descs_obs <- as.list(field_descriptions(fields))
-  descs_exp <- list(
-    env_biome = paste("Add terms that identify the major environment type(s)",
-                      "where your sample was collected. Recommend subclasses",
-                      "of biome [ENVO:00000428]. Multiple terms can be",
-                      "separated by one or more pipes e.g.:  mangrove biome",
-                      "[ENVO:01000181]|estuarine biome [ENVO:01000020]"),
-    env_feature = paste("Add terms that identify environmental entities having",
+  descs_obs <- field_descriptions(fields)
+  descs_exp <- data.frame(
+    row.names = fields,
+    Field = fields,
+    Description =
+      c(paste("Add terms that identify the major environment type(s)",
+                        "where your sample was collected. Recommend subclasses",
+                        "of biome [ENVO:00000428]. Multiple terms can be",
+                        "separated by one or more pipes e.g.:  mangrove biome",
+                        "[ENVO:01000181]|estuarine biome [ENVO:01000020]"),
+        paste("Add terms that identify environmental entities having",
                         "causal influences upon the entity at time of sampling,",
                         "multiple terms can be separated by pipes, e.g.: ",
                         "shoreline [ENVO:00000486]|intertidal zone",
-                        "[ENVO:00000316]")
+                        "[ENVO:00000316]")),
+    stringsAsFactors = FALSE
     )
   # There are unicode characters in here.  I'll just strip out any non-ASCII or
   # spaces.
-  descs_obs[[1]] <- charToRaw(descs_obs[[1]])
-  descs_obs[[2]] <- charToRaw(descs_obs[[2]])
-  descs_exp <- lapply(descs_exp, charToRaw)
   squash <- function(bytes) bytes[bytes < 0x80 & bytes != 0x20]
   # close enough!
-  expect_equal(lapply(descs_obs, squash), lapply(descs_exp, squash))
+  descs_obs <- apply(descs_obs, 1, function(row) squash(charToRaw(row[2])))
+  descs_exp <- apply(descs_exp, 1, function(row) squash(charToRaw(row[2])))
+  expect_equal(descs_obs, descs_exp)
 })
 
 test_that("field_descriptions handles missing entries correctly", {
   # There's no description for the subject_id field
   fields <- "subject_id"
   descs_obs <- field_descriptions(fields)
-  descs_exp <- c(subject_id = "")
+  descs_exp <- data.frame(
+    row.names = "subject_id",
+    Field = "subject_id",
+    Description = "", stringsAsFactors = FALSE
+  )
   expect_equal(descs_obs, descs_exp)
 })

@@ -10,9 +10,15 @@ field_descriptions(fields)
 \item{fields}{vector of field names, like \code{c("env_biome", "env_feature")}.}
 }
 \value{
-named vector of descriptions, named by the fields given.
+data frame of field names and descriptions.
 }
 \description{
-Given a vector of BioSample field (column) names, return SRA descriptions for
-each.
+Given a vector of BioSample field (column) names, return a data frame of SRA
+descriptions for each.
+}
+\examples{
+fields <- c("env_biome", "env_feature")
+descs <- field_descriptions(fields)
+# descs is a data frame of field/descrption pairs
+# Try View(descs)
 }
