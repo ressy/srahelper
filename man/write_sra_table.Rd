@@ -5,20 +5,30 @@
 \alias{read_sra_table}
 \title{Read and write SRA metadata to disk}
 \usage{
-write_sra_table(data, fp, overwrite = FALSE, ...)
+write_sra_table(data, fp = NULL, fp_suffix = "data",
+  overwrite = FALSE, ...)
 
 read_sra_table(fp, ...)
 }
 \arguments{
 \item{data}{data frame of SRA metadata}
 
-\item{fp}{file path to save text}
+\item{fp}{file path to save text.  If \code{NULL}, will be determined by the
+\code{submission} attribute on \code{data}, if present, and
+\code{fp_suffix}, if given, relative to the current working directory.}
+
+\item{fp_suffix}{A filename suffix to use when constructing output file path
+if \code{fp} is not given.}
 
 \item{overwrite}{should existing files be replaced?  If \code{FALSE}
 (default), an existing file throws an error.  If \code{TRUE}, an existing
 file is replaced without any prompting.}
 
 \item{...}{additional arguments for \code{utils::write.table}}
+}
+\value{
+The file path written to, for \code{write_sra_table}, or a data frame
+  read, for \code{read_sra_table}.
 }
 \description{
 These functions read and write to/from a data frame of SRA metadata (a

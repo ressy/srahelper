@@ -9,15 +9,37 @@
 #' in TSV format.
 #'
 #' @param data data frame of SRA metadata
-#' @param fp file path to save text
+#' @param fp file path to save text.  If \code{NULL}, will be determined by the
+#'   \code{submission} attribute on \code{data}, if present, and
+#'   \code{fp_suffix}, if given, relative to the current working directory.
+#' @param fp_suffix A filename suffix to use when constructing output file path
+#'   if \code{fp} is not given.
 #' @param overwrite should existing files be replaced?  If \code{FALSE}
 #'   (default), an existing file throws an error.  If \code{TRUE}, an existing
 #'   file is replaced without any prompting.
 #' @param ... additional arguments for \code{utils::write.table}
 #'
+#' @return The file path written to, for \code{write_sra_table}, or a data frame
+#'   read, for \code{read_sra_table}.
+#'
 #' @export
 #' @describeIn write_sra_table Write SRA metadata to disk
-write_sra_table <- function(data, fp, overwrite=FALSE, ...) {
+write_sra_table <- function(data, fp=NULL, fp_suffix="data", overwrite=FALSE, ...) {
+  if (is.null(fp)) {
+    # Automatically determine output file path
+    s <- attributes(data)$submission
+    if (! is.null(s)) {
+      dp <- s
+      if (! dir.exists(dp)) {
+        dir.create(dp)
+      }
+      fn <- paste0(s, "_", fp_suffix, ".tsv")
+    } else {
+      dp <- "."
+      fn <- paste0(fp_suffix, ".tsv")
+    }
+    fp <- file.path(dp, fn)
+  }
   # empty strings are allowed in the BioProject Accession column for the
   # Biosamples spreadsheet, but not "not applicable".
   if ("bioproject_accession" %in% colnames(data)) {
@@ -39,6 +61,7 @@ write_sra_table <- function(data, fp, overwrite=FALSE, ...) {
                      na = "not applicable",
                      row.names = FALSE,
                      ...)
+  return(fp)
 }
 
 #' @describeIn write_sra_table Read SRA metadata from disk
