@@ -17,6 +17,9 @@ fastq_dump <- function(run_info,
 
 # Generate a shell command for an ASCP file transfer in a list format usable
 # with do.call(system2, cmd).  If you're feeling adventurous, call it that way.
+# Note that evidently ascp will follow symlinks for the transfer rather than
+# transfer symlinks, so you can set up a contrived directory of symlinks ahead
+# of time.
 # md: data frame with any number of filename, filename1, ... columns
 # email: email address matching NCBI account
 # suffix: SRA-specific suffix used on the upload directory, after the email
