@@ -288,14 +288,20 @@ tidy_optional_fields <- function(data) {
 
 #' Get BioSample field descriptions
 #'
-#' Given a vector of BioSample field (column) names, return SRA descriptions for
-#' each.
+#' Given a vector of BioSample field (column) names, return a data frame of SRA
+#' descriptions for each.
 #'
 #' @param fields vector of field names, like \code{c("env_biome", "env_feature")}.
 #'
-#' @return named vector of descriptions, named by the fields given.
+#' @return data frame of field names and descriptions.
 #'
 #' @export
+#'
+#' @examples
+#' fields <- c("env_biome", "env_feature")
+#' descs <- field_descriptions(fields)
+#' # descs is a data frame of field/descrption pairs
+#' # Try View(descs)
 field_descriptions <- function(fields) {
   bs_attrs <- read_biosample_attributes()
   has_name <- function(field, attrib) {
@@ -315,9 +321,13 @@ field_descriptions <- function(fields) {
     return("")
   })
 
-  names(desc) <- fields
   # Trim off whitespace including trailing line endings
   # https://stackoverflow.com/a/2261149
   trim <- function (x) gsub("^\\s+|\\s+$", "", x)
-  trim(desc)
+  desc <- trim(desc)
+
+  data.frame(
+    Field = fields,
+    Description = desc,
+    stringsAsFactors = FALSE)
 }
