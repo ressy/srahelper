@@ -24,7 +24,8 @@
 #'
 #' @export
 #' @describeIn write_sra_table Write SRA metadata to disk
-write_sra_table <- function(data, fp=NULL, fp_suffix="data", overwrite=FALSE, ...) {
+write_sra_table <- function(data, fp=NULL, fp_suffix="data",
+                            overwrite=FALSE, ...) {
   if (is.null(fp)) {
     # Automatically determine output file path
     s <- attributes(data)$submission
@@ -188,7 +189,7 @@ validate_mandatory_fields <- function(data, problems=character()) {
 
 validate_filenames <- function(data, problems=character()) {
   fields <- attr(problems, "fields")
-  columns <- grep("^filename[0-9]*$", colnames(data), value=TRUE)
+  columns <- grep("^filename[0-9]*$", colnames(data), value = TRUE)
   for (column in columns) {
     if (any(basename(data[[column]]) != data[[column]]))
       problems <- c(problems,
@@ -213,7 +214,7 @@ validate_hardware <- function(data, problems=character()) {
     }
   }
   if (! is.null(instrument_model) && ! all(blank(instrument_model))) {
-    inst_all <-unlist(FIXED_VOCABULARY$instrument_model)
+    inst_all <- unlist(FIXED_VOCABULARY$instrument_model)
     if (any(! instrument_model %in% inst_all)) {
       problems <- c(problems,
                     "Unknown instrument_model values")

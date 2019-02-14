@@ -31,7 +31,8 @@ check_sra_table_written <- function(data, fp) {
   rownames(data) <- data$sample_name
   # Columns are always character
   data$sample_thing1 <- as.character(data$sample_thing1)
-  # The comments and mandatory fields attributes are always present from read_sra_table
+  # The comments and mandatory fields attributes are always present from
+  # read_sra_table
   attr(data, "comments") <- character()
   attr(data, "mandatory_fields") <- character()
   data2 <- read_sra_table(fp)
@@ -84,7 +85,7 @@ test_that("write_sra_table autodetermines output file path", {
   data <- setup_sra_table()
   fp <- write_sra_table(data)
   expect_true(file.exists(fp))
-  expect_equal(fp , "./data.tsv")
+  expect_equal(fp, "./data.tsv")
   check_sra_table_written(data, fp)
 })
 
@@ -96,7 +97,7 @@ test_that("write_sra_table uses file suffix given", {
   data <- setup_sra_table()
   fp <- write_sra_table(data, fp_suffix = "stuff")
   expect_true(file.exists(fp))
-  expect_equal(fp , "./stuff.tsv")
+  expect_equal(fp, "./stuff.tsv")
   check_sra_table_written(data, fp)
 })
 
@@ -245,11 +246,11 @@ test_that("validate_fields can skip warnings", {
 
 
 test_that("fill_blanks fills blank values in data frame", {
-  data <- data.frame(A=c("a", "b", "", "c", NA),
-                     B=c("a", "b", "", "c", NA),
+  data <- data.frame(A = c("a", "b", "", "c", NA),
+                     B = c("a", "b", "", "c", NA),
                      stringsAsFactors = FALSE)
-  result_expected <- data.frame(A=c("a", "b", "missing", "c", "missing"),
-                                B=c("a", "b", "missing", "c", "missing"),
+  result_expected <- data.frame(A = c("a", "b", "missing", "c", "missing"),
+                                B = c("a", "b", "missing", "c", "missing"),
                                 stringsAsFactors = FALSE)
   result_observed <- fill_blanks(colnames(data), data)
   expect_equal(result_observed, result_expected)
@@ -270,8 +271,8 @@ test_that("fill_blanks warns of unknown blank text", {
 })
 
 test_that("fill_blanks ignores factors", {
-  data <- data.frame(A=c("a", "b", "", "c", NA),
-                     B=c("a", "b", "", "c", NA))
+  data <- data.frame(A = c("a", "b", "", "c", NA),
+                     B = c("a", "b", "", "c", NA))
   result_expected <- data
   result_observed <- fill_blanks(colnames(data), data)
   expect_equal(result_observed, result_expected)

@@ -50,13 +50,13 @@ build_metadata <- function(sample_attrs,
     biosample_accession  <- character(N)
     sample_name          <- character(N)
   })
-  metadata <- do.call(data.frame, c(metadata, list(stringsAsFactors=FALSE)))
+  metadata <- do.call(data.frame, c(metadata, list(stringsAsFactors = FALSE)))
   metadata <- fill_from_columns(metadata, sample_attrs, col_pairs)
   metadata <- process_fixed_vocab(metadata)
   # All fields added so far are mandatory
   attr(metadata, "mandatory_fields") <- colnames(metadata)
   # Fill in any additional filenameN columns.
-  columns <- grep("^filename[0-9]+$", colnames(sample_attrs), value=TRUE)
+  columns <- grep("^filename[0-9]+$", colnames(sample_attrs), value = TRUE)
   metadata[columns] <- sample_attrs[columns]
   # Constant fields
   if (! is.null(constants)) {

@@ -6,19 +6,19 @@
 #' for required fields.  See \code{\link{fill_blanks}}.
 #'
 #' @export
-BLANK_TYPES <- c('not collected',
-                 'not applicable',
-                 'missing')
+BLANK_TYPES <- c("not collected",
+                 "not applicable",
+                 "missing")
 
 #' SRA server hostnames
 #'
 #' @export
-HTTP_SRV = c(
+HTTP_SRV <- c(
     SUBMIT = "submit.ncbi.nlm.nih.gov",
     WWW    = "www.ncbi.nlm.nih.gov"
   )
 
-FTP_SRV = c(
+FTP_SRV <- c(
   TRACE = "ftp-trace.ncbi.nlm.nih.gov"
 )
 

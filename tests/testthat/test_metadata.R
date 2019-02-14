@@ -92,4 +92,3 @@ test_that("write_metadata handles overwrite options", {
   data2 <- read_sra_table(fp)
   expect_equal(data2$title[1], "newname")
 })
-

@@ -3,7 +3,7 @@
 # make a basic input data frame for biosamples and/or metadata preparation.
 setup_sra_table <- function() {
   data.frame(sample_name = paste0("sample", 1:5),
-             sample_thing1 = (1:5)*5,
+             sample_thing1 = (1:5) * 5,
              sample_thing2 = letters[1:5],
              stringsAsFactors = FALSE)
 }
@@ -12,7 +12,7 @@ setup_sra_table <- function() {
 # an existing biosamples input data frame.
 setup_multi_md <- function(sample_attrs, N=8) {
   lib_attrs <- data.frame(
-    sample_name = rep(sample_attrs$sample_name, each=N),
+    sample_name = rep(sample_attrs$sample_name, each = N),
     replicate = paste0("rep", 1:N),
     stringsAsFactors = FALSE)
   lib_attrs$title <- with(lib_attrs, paste(sample_name,

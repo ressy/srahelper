@@ -131,15 +131,15 @@ test_that("field_descriptions describes BioSample fields", {
     Field = fields,
     Description =
       c(paste("Add terms that identify the major environment type(s)",
-                        "where your sample was collected. Recommend subclasses",
-                        "of biome [ENVO:00000428]. Multiple terms can be",
-                        "separated by one or more pipes e.g.:  mangrove biome",
-                        "[ENVO:01000181]|estuarine biome [ENVO:01000020]"),
+              "where your sample was collected. Recommend subclasses",
+              "of biome [ENVO:00000428]. Multiple terms can be",
+              "separated by one or more pipes e.g.:  mangrove biome",
+              "[ENVO:01000181]|estuarine biome [ENVO:01000020]"),
         paste("Add terms that identify environmental entities having",
-                        "causal influences upon the entity at time of sampling,",
-                        "multiple terms can be separated by pipes, e.g.: ",
-                        "shoreline [ENVO:00000486]|intertidal zone",
-                        "[ENVO:00000316]")),
+              "causal influences upon the entity at time of sampling,",
+              "multiple terms can be separated by pipes, e.g.: ",
+              "shoreline [ENVO:00000486]|intertidal zone",
+              "[ENVO:00000316]")),
     stringsAsFactors = FALSE
     )
   # There are unicode characters in here.  I'll just strip out any non-ASCII or
