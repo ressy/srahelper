@@ -1,3 +1,61 @@
+# Sequence data functions
+
+#' Report files containing no sequences
+#'
+#' Given a character vector of file paths, produce a logical vector with TRUE
+#' for files that contain no sequences and FALSE otherwise.  Supports FASTA and
+#' FASTQ, as plain text, gzip-compressed, or bzip-compressed.
+#'
+#'
+#' @param filepaths character vector of file paths to check
+#'
+#' @return logical vector, TRUE if file contains no sequences or FALSE otherwise
+#'
+#' @export
+has_zero_seqs <- function(filepaths) {
+  file.size(filepaths) == 0 |
+    is_empty_gzfile(filepaths) |
+    is_empty_bzfile(filepaths)
+}
+
+is_empty_gzfile <- function(filepaths) {
+  isgz <- has_magic(filepaths, c(0x1f, 0x8b))
+  # CRC and size%(2^32), so if the sum is zero, it's empty.
+  isgz & sum_footer(filepaths, 8) == 0
+}
+
+is_empty_bzfile <- function(filepaths) {
+  isbz <- has_magic(filepaths, c(0x42, 0x5A))
+  # CRC (no size) so if the sum is zero it's probably empty.
+  isbz & sum_footer(filepaths, 4) == 0
+}
+
+# sum the last N raw bytes of given files.
+sum_footer <- function(filepaths, nbytes) {
+  sapply(filepaths, function(fp) {
+    f <- file(fp, open = "rb")
+    seek(f, origin = "end", where = -nbytes)
+    footer <- readBin(f, what = "raw", n = nbytes)
+    footer_sum <- sum(as.integer(footer))
+    close(f)
+    footer_sum
+  })
+}
+
+has_magic <- function(filepaths, magic) {
+  sapply(filepaths, function(fp) {
+    prefix <- readChar(fp, nchars = 2, useBytes = TRUE)
+    # do we have exactly two bytes?
+    if (! identical(nchar(prefix, type = "bytes"), 2L)) {
+      return(NA)
+    }
+    # if so, do they match the magic bytes?
+    identical(charToRaw(prefix), as.raw(magic))
+  })
+}
+
+# Misc extras -------------------------------------------------------------
+
 
 # Make a data frame of R1/R2 files paired by filename prefix.
 tabulate_paired_files <- function(dp,
@@ -38,19 +96,3 @@ tabulate_num_seqs <- function(dataset) {
     sapply(dataset[[cidx]], read_num_seqs)
   }
 }
-
-# for each sample in the given metadata, verify read files are not empty and, if
-# two are given, are paired correctly
-# check_data_files <- function(dataset) {
-#   cidx <- match(c("filename", "filename2"), colnames(dataset))
-#   cidx <- cidx[! is.na(cidx)]
-#   if (length(cidx == 2)) {
-#     unname(apply(dataset[, cidx], 1, function(pair) {
-#       r1 <- read_num_seqs(pair[[1]])
-#       r2 <- read_num_seqs(pair[[2]])
-#       r1 > 0 & r1 == r2
-#     }))
-#   } else if (length(cidx) == 1) {
-#     sapply(dataset[[cidx]], function(fp) read_num_seqs(fp) > 0)
-#   }
-# }
