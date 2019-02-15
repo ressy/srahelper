@@ -9,6 +9,12 @@
 A jumble of helper functions to assist with preparing NCBI data submissions
 and working with the associated files.
 }
+\details{
+Some summaries by topic:
+\itemize{
+\item \link{biosamples}
+}
+}
 \author{
 \strong{Maintainer}: Jesse Connell \email{ancon@upenn.edu}
 

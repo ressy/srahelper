@@ -1,4 +1,23 @@
-# Submission templates provided as TSV or Excel files.
+#' NCBI Submission Templates
+#'
+#' Some common concepts apply for multiple submission template types (e.g. SRA,
+#' BioSample, GenBank) like required and optional fields and fixed-vocabulary or
+#' otherwise restricted-value fields.  A given submission type (e.g. BioSample)
+#' can have a wide range of possible templates (Human, Microbe, Virus, etc.).
+#' Template-related functions here help manage listing and loading these
+#' templates.  These are used by more specific helpers like
+#' \code{\link{build_biosamples_from_template}} from the \link{biosamples}
+#' functions.
+#'
+#' * \code{\link{list_template_types}}: List the types (submission categories)
+#'   that templates are defined for.
+#' * \code{\link{list_templates}}: List templates within a category.
+#' * \code{\link{read_template}}: Load an installed template as a data frame.
+#'
+#' @md
+#'
+#' @name templates
+NULL
 
 #' Read table template
 #'
