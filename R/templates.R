@@ -1,16 +1,16 @@
-# SRA Templates provided as TSV or Excel files during a submission for BioSample
-# Attributes or Library Metadata.
+# Submission templates provided as TSV or Excel files.
 
-#' Read SRA table template
+#' Read table template
 #'
-#' load an SRA template by name (e.g., "MIMS.me.human-associated.4.0") and
-#' return as a data frame.
+#' load a template by name (e.g., "MIMS.me.human-associated.4.0" for BioSamples)
+#' and return as a data frame.  Currently supports BioSample and SRA Metadata
+#' template types.
 #'
 #' @param template_name name of submission type (e.g.,
 #'   "MIMS.me.human-associated.4.0")
 #' @param template_type either "biosample_attributes" or "library_metadata".
 #'
-#' @return data frame with SRA field names and types set by template.
+#' @return data frame with field names and types set by template.
 #' @export
 read_template <- function(template_name,
                           template_type="biosample_attributes") {
@@ -22,7 +22,7 @@ read_template <- function(template_name,
   fp <- system.file("extdata", "templates", template_type,
                     paste(template_name, "tsv", sep = "."),
                     package = methods::getPackageName())
-  data <- read_sra_table(fp)
+  data <- read_table(fp)
   mf <- attributes(data)$mandatory_fields
   of <- colnames(data)[! colnames(data) %in% mf]
   attr(data, "optional_fields") <- of
@@ -32,8 +32,8 @@ read_template <- function(template_name,
 #' List installed template files
 #'
 #' List names of templates installed in the package.  These are the spreadsheets
-#' the SRA web interface gives you during a submission at the attributes and
-#' metadata steps.
+#' the submission portal web interface gives you during a submission at the
+#' attributes and metadata steps.
 #'
 #' @param template_type either "biosample_attributes" or "library_metadata".
 #'
@@ -51,7 +51,7 @@ list_templates <- function(template_type="biosample_attributes") {
 
 #' List template types
 #'
-#' List types of SRA templates installed.
+#' List types of NCBI submission templates installed.
 #'
 #' @return vector of template type names.
 #' @export

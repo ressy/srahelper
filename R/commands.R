@@ -1,4 +1,4 @@
-# Some helpers for SRA-related executables like fastq-dump or ascp.
+# Some helpers for NCBI-related commands like fastq-dump or ascp.
 
 # download fastq files for the SRR's in the given run info table.
 fastq_dump <- function(run_info,
@@ -22,7 +22,8 @@ fastq_dump <- function(run_info,
 # of time.
 # md: data frame with any number of filename, filename1, ... columns
 # email: email address matching NCBI account
-# suffix: SRA-specific suffix used on the upload directory, after the email
+# suffix: user-specific suffix used on the upload directory, after the email
+# dir_path: optional path to prefix each source data file with.
 # address and underscore.  "Aspera command line upload instructions" will give
 # this.
 # command: path to the ascp command.
@@ -32,11 +33,15 @@ fastq_dump <- function(run_info,
 ascp_make_command <- function(md,
                               email,
                               suffix,
+                              dir_path = NULL,
                               command = "ascp",
                               fp_key = "~/.ssh/id_rsa-ncbi",
                               dp_dest = format(Sys.time(), "%Y%m%d")) {
   colidx <- grep("^filename", colnames(md))
-  src <- unname(unlist(md[, colidx]))
+  src <- unname(unlist(lapply(md[, colidx], as.character)))
+  if (! is.null(dir_path)) {
+    src <- file.path(dir_path, src)
+  }
   dest <- paste0("subasp@upload.ncbi.nlm.nih.gov:",
                  "uploads/", email, "_", suffix, "/", dp_dest)
   list(command = command,

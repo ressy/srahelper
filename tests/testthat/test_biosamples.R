@@ -97,7 +97,7 @@ test_that("write_biosamples writes attributes, no submission set", {
 })
 
 test_that("write_biosamples handles overwrite options", {
-  # This functionality comes from write_sra_table and should be usable from here
+  # This functionality comes from write_table and should be usable from here
   # too.
   biosamples <- setup_biosamples()
   dp <- tempfile()
@@ -107,15 +107,15 @@ test_that("write_biosamples handles overwrite options", {
   s <- attributes(biosamples)$submission
   fp <- file.path(s, paste0(s, "_biosamples.tsv"))
   expect_true(file.exists(fp))
-  data2 <- read_sra_table(fp)
+  data2 <- read_table(fp)
   expect_equal(data2$sample_name[1], "sample1")
   expect_error(write_biosamples(biosamples),
                paste("Destination file already exists:", fp))
-  data2 <- read_sra_table(fp)
+  data2 <- read_table(fp)
   expect_equal(data2$sample_name[1], "sample1")
   biosamples$sample_name[1] <- "newname"
   write_biosamples(biosamples, overwrite = TRUE)
-  data2 <- read_sra_table(fp)
+  data2 <- read_table(fp)
   expect_equal(data2$sample_name[1], "newname")
 })
 

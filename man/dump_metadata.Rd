@@ -2,7 +2,7 @@
 % Please edit documentation in R/biosamples.R
 \name{dump_metadata}
 \alias{dump_metadata}
-\title{Download SRA BioSample Metadata}
+\title{Download BioSample Metadata}
 \usage{
 dump_metadata(dp = NULL)
 }

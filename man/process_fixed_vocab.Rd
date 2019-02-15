@@ -13,7 +13,9 @@ process_fixed_vocab(data)
 data frame with recognized columns converted to factors.
 }
 \description{
-For SRA fields in the given data frame known to have a strictly fixed
+For metadata fields in the given data frame known to have a strictly fixed
 vocabulary (according to \code{FIXED_VOCABULARY}), convert each to a factor
-with levels corresponding to the vocabulary.
+with levels corresponding to the vocabulary.  For example, the library_layout
+column in an SRA metadata spreadsheet can only contain the values "Single" or
+"Paired".
 }

@@ -3,13 +3,13 @@
 \docType{data}
 \name{BLANK_TYPES}
 \alias{BLANK_TYPES}
-\title{SRA empty field values}
+\title{BioSample empty field values}
 \format{An object of class \code{character} of length 3.}
 \usage{
 BLANK_TYPES
 }
 \description{
-These strings are listed in the SRA docs as options for data not present even
+These strings are listed in the docs as options for data not present even
 for required fields.  See \code{\link{fill_blanks}}.
 }
 \keyword{datasets}

@@ -67,7 +67,7 @@ test_that("write_metadata writes metadata, no submission set", {
 
 
 test_that("write_metadata handles overwrite options", {
-  # This functionality comes from write_sra_table and should be usable from here
+  # This functionality comes from write_table and should be usable from here
   # too.
   sample_attrs <- setup_sra_table()
   col_pairs <- c(title = "sample_name")
@@ -81,14 +81,14 @@ test_that("write_metadata handles overwrite options", {
   s <- attributes(metadata)$submission
   fp <- file.path(s, paste0(s, "_metadata.tsv"))
   expect_true(file.exists(fp))
-  data2 <- read_sra_table(fp)
+  data2 <- read_table(fp)
   expect_equal(data2$title[1], "sample1")
   expect_error(write_metadata(metadata),
                paste("Destination file already exists:", fp))
-  data2 <- read_sra_table(fp)
+  data2 <- read_table(fp)
   expect_equal(data2$title[1], "sample1")
   metadata$title[1] <- "newname"
   write_metadata(metadata, overwrite = TRUE)
-  data2 <- read_sra_table(fp)
+  data2 <- read_table(fp)
   expect_equal(data2$title[1], "newname")
 })

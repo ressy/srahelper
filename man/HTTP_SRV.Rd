@@ -3,12 +3,12 @@
 \docType{data}
 \name{HTTP_SRV}
 \alias{HTTP_SRV}
-\title{SRA server hostnames}
+\title{NCBI server hostnames}
 \format{An object of class \code{character} of length 2.}
 \usage{
 HTTP_SRV
 }
 \description{
-SRA server hostnames
+NCBI server hostnames
 }
 \keyword{datasets}

@@ -1,14 +1,14 @@
-# Functions to handle SRA metadata tables generally, and individual fields.
+# Functions to handle NCBI metadata tables generally, and individual fields.
 
 # TODO xlsx support via openxlsx?
 
-#' Read and write SRA metadata to disk
+#' Read and write metadata to disk
 #'
-#' These functions read and write to/from a data frame of SRA metadata (a
-#' BioSamples spreadsheet, library prep metadata, or run info) to/from a file
-#' in TSV format.
+#' These functions read and write to/from a data frame of NCBI metadata (a
+#' BioSamples spreadsheet, SRA metadata, or run info) to/from a file in TSV
+#' format.
 #'
-#' @param data data frame of SRA metadata
+#' @param data data frame of metadata
 #' @param fp file path to save text.  If \code{NULL}, will be determined by the
 #'   \code{submission} attribute on \code{data}, if present, and
 #'   \code{fp_suffix}, if given, relative to the current working directory.
@@ -19,12 +19,12 @@
 #'   file is replaced without any prompting.
 #' @param ... additional arguments for \code{utils::write.table}
 #'
-#' @return The file path written to, for \code{write_sra_table}, or a data frame
-#'   read, for \code{read_sra_table}.
+#' @return The file path written to, for \code{write_table}, or a data frame
+#'   read, for \code{read_table}.
 #'
 #' @export
-#' @describeIn write_sra_table Write SRA metadata to disk
-write_sra_table <- function(data, fp=NULL, fp_suffix="data",
+#' @describeIn write_table Write metadata to disk
+write_table <- function(data, fp=NULL, fp_suffix="data",
                             overwrite=FALSE, ...) {
   if (is.null(fp)) {
     # Automatically determine output file path
@@ -65,10 +65,11 @@ write_sra_table <- function(data, fp=NULL, fp_suffix="data",
   return(fp)
 }
 
-#' @describeIn write_sra_table Read SRA metadata from disk
-read_sra_table <- function(fp, ...) {
-  # The SRA templates treat their comments like regular TSV fields so they might
-  # be quoted.  This confuses read.table.
+#' @describeIn write_table Read metadata from disk
+#' @export
+read_table <- function(fp, ...) {
+  # The NCBI submission templates treat their comments like regular TSV fields,
+  # so they might be quoted.  This confuses read.table.
   rawdata <- readChar(fp, file.info(fp)$size)
   rawlines <- strsplit(rawdata, "[\\r\\n]+", perl = TRUE)[[1]]
   idxl <- grepl("^\"?#", rawlines)
@@ -132,13 +133,13 @@ check_uniqueness <- function(data) {
   key
 }
 
-#' Check SRA fields for problems
+#' Check metadata fields for problems
 #'
-#' Check a data frame of SRA fields (biosample attributes or library metadata)
-#' for problems that may interfere with a submission.  Any problems found will
-#' be raised as warnings (unless \code{quiet=TRUE}) and returned as a vector.
+#' Check a data frame of metadata (biosample attributes or SRA metadata) for
+#' problems that may interfere with a submission.  Any problems found will be
+#' raised as warnings (unless \code{quiet=TRUE}) and returned as a vector.
 #'
-#' @param data data frame of SRA fields
+#' @param data data frame of metadata fields
 #' @param quiet skip calling \code{warning} for each problem?
 #'
 #' @return character vector of warnings
@@ -264,11 +265,11 @@ blank <- function(data) {
   is.na(data) | data == ""
 }
 
-#' Fill blanks with SRA keyword
+#' Fill blanks with NCBI-allowed keyword
 #'
 #' Factors will be ignored since they have their own controlled vocabulary, and
 #' biosample_accession and bioproject_accession columns will be ignored for data
-#' frames as these are allowed to be left blank for all-in-one submissions.
+#' frames as these are allowed to be left blank for all-in-one SRA submissions.
 #'
 #' @param vec either vector of column names (if data not NULL) or explicit data.
 #' @param data data frame to use, if filling multiple columns.
@@ -299,9 +300,11 @@ fill_blanks <- function(vec, data=NULL, value="missing") {
 
 #' Create factors for known fields with fixed vocabulary
 #'
-#' For SRA fields in the given data frame known to have a strictly fixed
+#' For metadata fields in the given data frame known to have a strictly fixed
 #' vocabulary (according to \code{FIXED_VOCABULARY}), convert each to a factor
-#' with levels corresponding to the vocabulary.
+#' with levels corresponding to the vocabulary.  For example, the library_layout
+#' column in an SRA metadata spreadsheet can only contain the values "Single" or
+#' "Paired".
 #'
 #' @param data data frame to modify.
 #'

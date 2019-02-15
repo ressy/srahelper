@@ -13,7 +13,7 @@ field_descriptions(fields)
 data frame of field names and descriptions.
 }
 \description{
-Given a vector of BioSample field (column) names, return a data frame of SRA
+Given a vector of BioSample field (column) names, return a data frame of
 descriptions for each.
 }
 \examples{
