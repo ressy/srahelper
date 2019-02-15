@@ -37,7 +37,7 @@ test_that("list_template_types lists template types installed", {
 
 
 test_that("read_template can read all template files", {
-  # see read_sra_table above as well
+  # see read_table above as well
   for (template_name in list_templates()) {
     # They all have mandatory fields, optional fields, and comments
     template <- read_template(template_name)

@@ -1,13 +1,14 @@
-context("Test general SRA table and field functions")
-
-# read_sra_table ----------------------------------------------------------
+context("Test general table and field functions")
 
 
-test_that("read_sra_table can read all template files", {
+# read_table --------------------------------------------------------------
+
+
+test_that("read_table can read all template files", {
   dp_templates <- system.file("extdata", "templates", "biosample_attributes",
                               package = "srahelper")
   fps <- list.files(dp_templates, full.names = TRUE)
-  mds <- lapply(fps, read_sra_table)
+  mds <- lapply(fps, read_table)
   # There should be N data frames
   mdclass <- sapply(mds, class)
   expect_equal(mdclass, rep("data.frame", length(fps)))
@@ -16,89 +17,90 @@ test_that("read_sra_table can read all template files", {
   expect_equal(mfclass, rep("character", length(fps)))
 })
 
-test_that("read_sra_table reads a Run Info table", {
+test_that("read_table reads a Run Info table", {
   testthat::skip("test not yet implemented")
   fp <- system.file("extdata", "examples", "SraRunTable.txt",
                     package = "srahelper")
-  data <- read_sra_table(fp)
+  data <- read_table(fp)
 })
 
 
-# write_sra_table ---------------------------------------------------------
+# write_table -------------------------------------------------------------
 
-check_sra_table_written <- function(data, fp) {
+
+check_table_written <- function(data, fp) {
   # Rownames will be sample names
   rownames(data) <- data$sample_name
   # Columns are always character
   data$sample_thing1 <- as.character(data$sample_thing1)
   # The comments and mandatory fields attributes are always present from
-  # read_sra_table
+  # read_table
   attr(data, "comments") <- character()
   attr(data, "mandatory_fields") <- character()
-  data2 <- read_sra_table(fp)
+  data2 <- read_table(fp)
   expect_identical(data2, data)
 }
 
-test_that("write_sra_table writes SRA fields", {
-  # Test write_sra_table alongside read_sra_table by ensuring they match.
+test_that("write_table writes metadata fields", {
+  # Test write_table alongside read_table by ensuring they match.
   fp <- tempfile()
   data <- setup_sra_table()
-  write_sra_table(data, fp)
+  write_table(data, fp)
   expect_true(file.exists(fp))
-  check_sra_table_written(data, fp)
+  check_table_written(data, fp)
   # # Rownames will be sample names
   # rownames(data) <- data$sample_name
   # # Columns are always character
   # data$sample_thing1 <- as.character(data$sample_thing1)
-  # # The comments and mandatory fields attributes are always present from read_sra_table
+  # # The comments and mandatory fields attributes are always present from read_table
   # attr(data, "comments") <- character()
   # attr(data, "mandatory_fields") <- character()
-  # data2 <- read_sra_table(fp)
+  # data2 <- read_table(fp)
   # expect_identical(data2, data)
 })
 
-test_that("write_sra_table handles overwrite options", {
+test_that("write_table handles overwrite options", {
   # check that overwrite is off by default and works when on
   fp <- tempfile()
   # Make sure overwriting is blocked by default
   data <- setup_sra_table()
-  write_sra_table(data, fp)
+  write_table(data, fp)
   expect_true(file.exists(fp))
-  data2 <- read_sra_table(fp)
+  data2 <- read_table(fp)
   expect_equal(data2$sample_name[1], "sample1")
-  expect_error(write_sra_table(data, fp),
+  expect_error(write_table(data, fp),
                paste("Destination file already exists:", fp))
-  data2 <- read_sra_table(fp)
+  data2 <- read_table(fp)
   expect_equal(data2$sample_name[1], "sample1")
   # Make sure overwriting works when enabled
   data$sample_name[1] <- "newname"
-  write_sra_table(data, fp, overwrite = TRUE)
-  data2 <- read_sra_table(fp)
+  write_table(data, fp, overwrite = TRUE)
+  data2 <- read_table(fp)
   expect_equal(data2$sample_name[1], "newname")
 })
 
-test_that("write_sra_table autodetermines output file path", {
+test_that("write_table autodetermines output file path", {
   fp <- tempfile()
   dir.create(fp)
   .cwd <- getwd()
   setwd(fp)
   data <- setup_sra_table()
-  fp <- write_sra_table(data)
+  fp <- write_table(data)
   expect_true(file.exists(fp))
   expect_equal(fp, "./data.tsv")
-  check_sra_table_written(data, fp)
+  check_table_written(data, fp)
 })
 
-test_that("write_sra_table uses file suffix given", {
+test_that("write_table uses file suffix given", {
   fp <- tempfile()
   dir.create(fp)
   .cwd <- getwd()
   setwd(fp)
   data <- setup_sra_table()
-  fp <- write_sra_table(data, fp_suffix = "stuff")
+  fp <- write_table(data, fp_suffix = "stuff")
   expect_true(file.exists(fp))
   expect_equal(fp, "./stuff.tsv")
-  check_sra_table_written(data, fp)
+  check_table_written(data, fp)
 })
 
 

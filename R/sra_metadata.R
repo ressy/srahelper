@@ -3,7 +3,7 @@
 
 #' @describeIn write_biosamples Write SRA library metadata to disk
 write_metadata <- function(data, ...) {
-  write_sra_table(data, fp_suffix = "metadata", ...)
+  write_table(data, fp_suffix = "metadata", ...)
 }
 
 #' Create blank metadata

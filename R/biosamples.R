@@ -78,12 +78,12 @@ build_biosamples_from_template <- function(package_name,
 #' \code{<type>.tsv} otherwise.
 #'
 #' @param data data frame of metadata
-#' @param ... additional arguments for \code{\link{write_sra_table}}
+#' @param ... additional arguments for \code{\link{write_table}}
 #'
 #' @export
 #' @describeIn write_biosamples Write BioSample attributes to disk
 write_biosamples <- function(data, ...) {
-  write_sra_table(data, fp_suffix = "biosamples", ...)
+  write_table(data, fp_suffix = "biosamples", ...)
 }
 
 

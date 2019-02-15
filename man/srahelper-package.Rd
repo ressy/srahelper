@@ -6,7 +6,7 @@
 \alias{srahelper-package}
 \title{SRA Helper}
 \description{
-A jumble of helper functions to assist with preparing NCBI SRA submissions
+A jumble of helper functions to assist with preparing NCBI data submissions
 and working with the associated files.
 }
 \author{

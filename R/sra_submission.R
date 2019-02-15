@@ -95,7 +95,7 @@ validate_sra_submission <- function(submission, ...) {
 #'
 #' @param submission list of data frames of SRA submission information, such as
 #'   created by \code{\link{build_sra_submission}}.
-#' @param ... additional arguments for \code{\link{write_sra_table}}
+#' @param ... additional arguments for \code{\link{write_table}}
 #'
 #' @return list of vectors of file paths saved for each spreadsheet category
 #'
@@ -128,7 +128,7 @@ write_sra_submission <- function(submission, ...) {
         fn <- paste0(fn_prefix, ".tsv")
       }
       fp <- file.path(dp, fn)
-      write_sra_table(data, fp, ...)
+      write_table(data, fp, ...)
       result[[thing]] <- c(result[[thing]], fp)
     }
   }

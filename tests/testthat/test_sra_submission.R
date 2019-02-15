@@ -190,14 +190,14 @@ test_that("write_sra_submission handles overwrite options", {
   expect_identical(result, result_expected)
   expect_true(all(file.exists(unlist(result))))
   fp_bs <- result$biosamples
-  data2 <- read_sra_table(fp_bs)
+  data2 <- read_table(fp_bs)
   expect_equal(data2$sample_name[1], "sample1")
   expect_error(write_sra_submission(submission),
                paste("Destination file already exists:", fp_bs))
   submission$biosamples$sample_name[1] <- "newname"
   submission$metadata$sample_name[1]   <- "newname"
   write_sra_submission(submission, overwrite = TRUE)
-  data2 <- read_sra_table(fp_bs)
+  data2 <- read_table(fp_bs)
   expect_equal(data2$sample_name[1], "newname")
 })
 
@@ -219,10 +219,10 @@ test_that("write_sra_submission splits for too many biosamples", {
   expect_identical(result, result_expected)
   expect_true(all(file.exists(unlist(result))))
   # Number of rows should match up as expected.
-  bs1 <- read_sra_table(result$biosamples[[1]])
-  bs2 <- read_sra_table(result$biosamples[[2]])
-  md1 <- read_sra_table(result$metadata[[1]])
-  md2 <- read_sra_table(result$metadata[[2]])
+  bs1 <- read_table(result$biosamples[[1]])
+  bs2 <- read_table(result$biosamples[[2]])
+  md1 <- read_table(result$metadata[[1]])
+  md2 <- read_table(result$metadata[[2]])
   expect_equal(nrow(bs1), 1000)
   expect_equal(nrow(bs2), 20)
   expect_equal(nrow(md1), 1000)
@@ -248,10 +248,10 @@ test_that("write_sra_submission splits for too many metadata entries", {
   # Number of rows should match up as expected.
   # With 300 metadata rows, we should get three samples in one chunk (900 md
   # rows) and two in the other (600 rows).
-  bs1 <- read_sra_table(result$biosamples[[1]])
-  bs2 <- read_sra_table(result$biosamples[[2]])
-  md1 <- read_sra_table(result$metadata[[1]])
-  md2 <- read_sra_table(result$metadata[[2]])
+  bs1 <- read_table(result$biosamples[[1]])
+  bs2 <- read_table(result$biosamples[[2]])
+  md1 <- read_table(result$metadata[[1]])
+  md2 <- read_table(result$metadata[[2]])
   expect_equal(nrow(bs1), 3)
   expect_equal(nrow(bs2), 2)
   expect_equal(nrow(md1), 900)

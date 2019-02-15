@@ -10,7 +10,7 @@ write_sra_submission(submission, ...)
 \item{submission}{list of data frames of SRA submission information, such as
 created by \code{\link{build_sra_submission}}.}
 
-\item{...}{additional arguments for \code{\link{write_sra_table}}}
+\item{...}{additional arguments for \code{\link{write_table}}}
 }
 \value{
 list of vectors of file paths saved for each spreadsheet category

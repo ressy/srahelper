@@ -5,8 +5,8 @@
 #' Read and write metadata to disk
 #'
 #' These functions read and write to/from a data frame of NCBI metadata (a
-#' BioSamples spreadsheet, SRA library prep metadata, or run info) to/from a
-#' file in TSV format.
+#' BioSamples spreadsheet, SRA metadata, or run info) to/from a file in TSV
+#' format.
 #'
 #' @param data data frame of metadata
 #' @param fp file path to save text.  If \code{NULL}, will be determined by the
@@ -19,12 +19,12 @@
 #'   file is replaced without any prompting.
 #' @param ... additional arguments for \code{utils::write.table}
 #'
-#' @return The file path written to, for \code{write_sra_table}, or a data frame
-#'   read, for \code{read_sra_table}.
+#' @return The file path written to, for \code{write_table}, or a data frame
+#'   read, for \code{read_table}.
 #'
 #' @export
-#' @describeIn write_sra_table Write metadata to disk
-write_sra_table <- function(data, fp=NULL, fp_suffix="data",
+#' @describeIn write_table Write metadata to disk
+write_table <- function(data, fp=NULL, fp_suffix="data",
                             overwrite=FALSE, ...) {
   if (is.null(fp)) {
     # Automatically determine output file path
@@ -65,8 +65,9 @@ write_sra_table <- function(data, fp=NULL, fp_suffix="data",
   return(fp)
 }
 
-#' @describeIn write_sra_table Read metadata from disk
-read_sra_table <- function(fp, ...) {
+#' @describeIn write_table Read metadata from disk
+#' @export
+read_table <- function(fp, ...) {
   # The NCBI submission templates treat their comments like regular TSV fields,
   # so they might be quoted.  This confuses read.table.
   rawdata <- readChar(fp, file.info(fp)$size)

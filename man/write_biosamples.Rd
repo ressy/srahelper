@@ -12,7 +12,7 @@ write_metadata(data, ...)
 \arguments{
 \item{data}{data frame of metadata}
 
-\item{...}{additional arguments for \code{\link{write_sra_table}}}
+\item{...}{additional arguments for \code{\link{write_table}}}
 }
 \description{
 These functions write spreadsheets to the working directory by type

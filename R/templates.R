@@ -22,7 +22,7 @@ read_template <- function(template_name,
   fp <- system.file("extdata", "templates", template_type,
                     paste(template_name, "tsv", sep = "."),
                     package = methods::getPackageName())
-  data <- read_sra_table(fp)
+  data <- read_table(fp)
   mf <- attributes(data)$mandatory_fields
   of <- colnames(data)[! colnames(data) %in% mf]
   attr(data, "optional_fields") <- of
