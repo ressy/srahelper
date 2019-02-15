@@ -1,4 +1,4 @@
-# High-level functions for handling submission data.
+# High-level functions for handling SRA submission data.
 
 #' Create BioSamples Attributes and SRA Metadata Tables
 #'
@@ -33,19 +33,19 @@
 #'   \code{biosample_col_pairs}.
 #' @param metadata_constants named vector for metadata, as for
 #'   \code{biosample_constants}.
-#' @param submission_accession the accession assigned by the SRA for the
-#'   submission, like "SUB####".  Will be attached to the output data frames as
-#'   an attribute if given.
+#' @param submission_accession the accession assigned by the submission portal
+#'   for the submission, like "SUB####".  Will be attached to the output data
+#'   frames as an attribute if given.
 #'
 #' @return list of data frames for BioSample Attributes and SRA Metadata.
 #' @export
-build_submission <- function(package_name, biosample_attrs,
-                             biosample_col_pairs=NULL,
-                             biosample_constants=NULL,
-                             metadata_attrs=NULL,
-                             metadata_col_pairs=NULL,
-                             metadata_constants=NULL,
-                             submission_accession=NULL) {
+build_sra_submission <- function(package_name, biosample_attrs,
+                                 biosample_col_pairs=NULL,
+                                 biosample_constants=NULL,
+                                 metadata_attrs=NULL,
+                                 metadata_col_pairs=NULL,
+                                 metadata_constants=NULL,
+                                 submission_accession=NULL) {
   # This is currently just the same as calling the BioSample and Metadata
   # functions separately and list'ing the result.
   if (is.null(metadata_attrs)) {
@@ -67,9 +67,9 @@ build_submission <- function(package_name, biosample_attrs,
   submission
 }
 
-#' Check both SRA spreadsheets for problems
+#' Check both SRA submission spreadsheets for problems
 #'
-#' Check the biosample attributes or library metadata data frames for problems
+#' Check the biosample attributes and library metadata data frames for problems
 #' using \code{\link{validate_fields}}.
 #'
 #' @param submission list of data frames of SRA submission information
@@ -77,7 +77,7 @@ build_submission <- function(package_name, biosample_attrs,
 #'
 #' @return list of character vector of warnings for each data frame
 #' @export
-validate_submission <- function(submission, ...) {
+validate_sra_submission <- function(submission, ...) {
   lapply(submission, validate_fields, ... = ...)
 }
 
@@ -94,13 +94,13 @@ validate_submission <- function(submission, ...) {
 #' \code{biosamples.tsv} and \code{metadata.tsv}.
 #'
 #' @param submission list of data frames of SRA submission information, such as
-#'   created by \code{\link{build_submission}}.
+#'   created by \code{\link{build_sra_submission}}.
 #' @param ... additional arguments for \code{\link{write_sra_table}}
 #'
 #' @return list of vectors of file paths saved for each spreadsheet category
 #'
 #' @export
-write_submission <- function(submission, ...) {
+write_sra_submission <- function(submission, ...) {
   submission <- chunk_submission(submission)
   # Handle biosamples and metadata separately
   result <- list()
@@ -152,7 +152,7 @@ write_submission <- function(submission, ...) {
 #' organized so a given sample has all of its data in the same "chunk."
 #'
 #' @param submission list of submission data, as created by
-#'   \code{\link{build_submission}}.
+#'   \code{\link{build_sra_submission}}.
 #' @param rowsmax maximum number of rows to be permitted in each chunk
 #'   (spreadsheet).
 chunk_submission <- function(submission, rowsmax=1000) {

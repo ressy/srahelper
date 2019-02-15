@@ -2,7 +2,7 @@
 % Please edit documentation in R/tables.R
 \name{fill_blanks}
 \alias{fill_blanks}
-\title{Fill blanks with SRA keyword}
+\title{Fill blanks with NCBI-allowed keyword}
 \usage{
 fill_blanks(vec, data = NULL, value = "missing")
 }
@@ -20,5 +20,5 @@ data modified vector or data frame with blanks filled in.
 \description{
 Factors will be ignored since they have their own controlled vocabulary, and
 biosample_accession and bioproject_accession columns will be ignored for data
-frames as these are allowed to be left blank for all-in-one submissions.
+frames as these are allowed to be left blank for all-in-one SRA submissions.
 }

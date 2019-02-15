@@ -1,8 +1,8 @@
 # https://submit.ncbi.nlm.nih.gov/api/2.0/docs/ ?
 
-#' SRA empty field values
+#' BioSample empty field values
 #'
-#' These strings are listed in the SRA docs as options for data not present even
+#' These strings are listed in the docs as options for data not present even
 #' for required fields.  See \code{\link{fill_blanks}}.
 #'
 #' @export
@@ -10,7 +10,7 @@ BLANK_TYPES <- c("not collected",
                  "not applicable",
                  "missing")
 
-#' SRA server hostnames
+#' NCBI server hostnames
 #'
 #' @export
 HTTP_SRV <- c(

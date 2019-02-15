@@ -2,12 +2,12 @@
 % Please edit documentation in R/tables.R
 \name{validate_fields}
 \alias{validate_fields}
-\title{Check SRA fields for problems}
+\title{Check metadata fields for problems}
 \usage{
 validate_fields(data, quiet = FALSE)
 }
 \arguments{
-\item{data}{data frame of SRA fields}
+\item{data}{data frame of metadata fields}
 
 \item{quiet}{skip calling \code{warning} for each problem?}
 }
@@ -15,7 +15,7 @@ validate_fields(data, quiet = FALSE)
 character vector of warnings
 }
 \description{
-Check a data frame of SRA fields (biosample attributes or library metadata)
-for problems that may interfere with a submission.  Any problems found will
-be raised as warnings (unless \code{quiet=TRUE}) and returned as a vector.
+Check a data frame of metadata (biosample attributes or SRA metadata) for
+problems that may interfere with a submission.  Any problems found will be
+raised as warnings (unless \code{quiet=TRUE}) and returned as a vector.
 }

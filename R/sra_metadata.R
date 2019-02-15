@@ -1,4 +1,4 @@
-# Functions to handle Library Metadata tables (the info specific to sample
+# Functions to handle SRA Library Metadata tables (the info specific to sample
 # preparation and sequencing; for general metadata, see tables.R.)
 
 #' @describeIn write_biosamples Write SRA library metadata to disk
@@ -16,8 +16,9 @@ write_metadata <- function(data, ...) {
 #'   column names from the existing data frame to the new data frame.  Remaining
 #'   columns with matching names will also be used.  Other columns not in
 #'   \code{col_pairs} or the template's fields are ignored.
-#' @param submission the accession assigned by the SRA for the submission, like
-#'   "SUB####".  Will be attached to the output data frame as an attribute.
+#' @param submission the accession assigned by the submission portal for the
+#'   submission, like "SUB####".  Will be attached to the output data frame as
+#'   an attribute.
 #' @param col_pairs named vector of column names in the existing data frame with
 #'   names set to column names in the new data frame.  Vector names that don't
 #'   match known column names signify custom columns to add.

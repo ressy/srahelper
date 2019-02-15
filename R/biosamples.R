@@ -2,7 +2,7 @@
 
 #' Create BioSamples Table
 #'
-#' Create a new SRA BioSamples table using a named template and existing sample
+#' Create a new BioSamples table using a named template and existing sample
 #' attributes.
 #'
 #' @param package_name name of BioSample Package for the template to use, as
@@ -14,15 +14,16 @@
 #'   column names from the existing data frame to the new data frame.  Remaining
 #'   columns with matching names will also be used.  Other columns not in
 #'   \code{col_pairs} or the template's fields are ignored.
-#' @param submission the accession assigned by the SRA for the submission, like
-#'   "SUB####".  Will be attached to the output data frame as an attribute.
+#' @param submission the accession assigned by the submission portal for the
+#'   submission, like "SUB####".  Will be attached to the output data frame as
+#'   an attribute.
 #' @param col_pairs named vector of column names in the existing data frame with
 #'   names set to column names in the new data frame.  Vector names that don't
 #'   match known column names signify custom columns to add.
 #' @param constants vector of field names to match to constant values for all
 #'   samples.
 #'
-#' @return data frame with SRA BioSample attributes defined.
+#' @return data frame with BioSample attributes defined.
 #' @export
 build_biosamples_from_template <- function(package_name,
                                            sample_attrs,
@@ -69,18 +70,18 @@ build_biosamples_from_template <- function(package_name,
   biosamples
 }
 
-#' Write SRA BioSample attributes or metadata to disk
+#' Write BioSample attributes or metadata to disk
 #'
-#' These functions write SRA spreadsheets to the working directory by type
+#' These functions write spreadsheets to the working directory by type
 #' (BioSample attributes or library metadata) with the naming scheme
 #' \code{<submission>/<submission>_<type>.tsv} if submission is defined or just
 #' \code{<type>.tsv} otherwise.
 #'
-#' @param data data frame of SRA metadata
+#' @param data data frame of metadata
 #' @param ... additional arguments for \code{\link{write_sra_table}}
 #'
 #' @export
-#' @describeIn write_biosamples Write SRA BioSample attributes to disk
+#' @describeIn write_biosamples Write BioSample attributes to disk
 write_biosamples <- function(data, ...) {
   write_sra_table(data, fp_suffix = "biosamples", ...)
 }
@@ -92,7 +93,7 @@ write_biosamples <- function(data, ...) {
 # keep a raw copy of the metadata inside the package and update from NCBI when
 # needed.
 
-#' Download SRA BioSample Metadata
+#' Download BioSample Metadata
 #'
 #' Download all available BioSample package and template information and save to
 #' a given directory.
@@ -273,7 +274,7 @@ download_template <- function(package_name, fp=NULL) {
 #' any optional fields that you do have information for to clear out the
 #' remaining empty ones.
 #'
-#' @param data data frame of SRA metadata
+#' @param data data frame of metadata
 #'
 #' @return data frame with blank optional fields removed
 #'
@@ -292,7 +293,7 @@ tidy_optional_fields <- function(data) {
 
 #' Get BioSample field descriptions
 #'
-#' Given a vector of BioSample field (column) names, return a data frame of SRA
+#' Given a vector of BioSample field (column) names, return a data frame of
 #' descriptions for each.
 #'
 #' @param fields vector of field names, like \code{c("env_biome", "env_feature")}.

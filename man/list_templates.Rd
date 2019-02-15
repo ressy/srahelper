@@ -14,6 +14,6 @@ vector of template names, without file extension.
 }
 \description{
 List names of templates installed in the package.  These are the spreadsheets
-the SRA web interface gives you during a submission at the attributes and
-metadata steps.
+the submission portal web interface gives you during a submission at the
+attributes and metadata steps.
 }

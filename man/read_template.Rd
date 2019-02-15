@@ -2,7 +2,7 @@
 % Please edit documentation in R/templates.R
 \name{read_template}
 \alias{read_template}
-\title{Read SRA table template}
+\title{Read table template}
 \usage{
 read_template(template_name, template_type = "biosample_attributes")
 }
@@ -13,9 +13,10 @@ read_template(template_name, template_type = "biosample_attributes")
 \item{template_type}{either "biosample_attributes" or "library_metadata".}
 }
 \value{
-data frame with SRA field names and types set by template.
+data frame with field names and types set by template.
 }
 \description{
-load an SRA template by name (e.g., "MIMS.me.human-associated.4.0") and
-return as a data frame.
+load a template by name (e.g., "MIMS.me.human-associated.4.0" for BioSamples)
+and return as a data frame.  Currently supports BioSample and SRA Metadata
+template types.
 }

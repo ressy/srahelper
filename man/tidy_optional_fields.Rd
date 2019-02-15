@@ -7,7 +7,7 @@
 tidy_optional_fields(data)
 }
 \arguments{
-\item{data}{data frame of SRA metadata}
+\item{data}{data frame of metadata}
 }
 \value{
 data frame with blank optional fields removed

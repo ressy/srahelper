@@ -3,7 +3,7 @@
 \name{write_sra_table}
 \alias{write_sra_table}
 \alias{read_sra_table}
-\title{Read and write SRA metadata to disk}
+\title{Read and write metadata to disk}
 \usage{
 write_sra_table(data, fp = NULL, fp_suffix = "data",
   overwrite = FALSE, ...)
@@ -11,7 +11,7 @@ write_sra_table(data, fp = NULL, fp_suffix = "data",
 read_sra_table(fp, ...)
 }
 \arguments{
-\item{data}{data frame of SRA metadata}
+\item{data}{data frame of metadata}
 
 \item{fp}{file path to save text.  If \code{NULL}, will be determined by the
 \code{submission} attribute on \code{data}, if present, and
@@ -31,14 +31,14 @@ The file path written to, for \code{write_sra_table}, or a data frame
   read, for \code{read_sra_table}.
 }
 \description{
-These functions read and write to/from a data frame of SRA metadata (a
-BioSamples spreadsheet, library prep metadata, or run info) to/from a file
-in TSV format.
+These functions read and write to/from a data frame of NCBI metadata (a
+BioSamples spreadsheet, SRA library prep metadata, or run info) to/from a
+file in TSV format.
 }
 \section{Functions}{
 \itemize{
-\item \code{write_sra_table}: Write SRA metadata to disk
+\item \code{write_sra_table}: Write metadata to disk
 
-\item \code{read_sra_table}: Read SRA metadata from disk
+\item \code{read_sra_table}: Read metadata from disk
 }}
 
