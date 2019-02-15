@@ -9,7 +9,7 @@ test_that("build_submission makes list of data frames", {
   submission <- build_submission(package_name = template,
                                  biosample_attrs = sample_attrs)
   # test basic structure of submission object
-  expect_equal(names(submission), c("biosamples","metadata"))
+  expect_equal(names(submission), c("biosamples", "metadata"))
   # check individual data frames
   check_biosamples(submission[["biosamples"]], template, sample_attrs)
   check_metadata(submission[["metadata"]])
@@ -23,7 +23,7 @@ test_that("build_submission works with package display name", {
 
   submission <- build_submission(package_name = template_display,
                                  biosample_attrs = sample_attrs)
-  expect_equal(names(submission), c("biosamples","metadata"))
+  expect_equal(names(submission), c("biosamples", "metadata"))
   check_biosamples(submission[["biosamples"]], template, sample_attrs)
   check_metadata(submission[["metadata"]])
 })
@@ -36,7 +36,7 @@ test_that("build_submission handles submission accession", {
                                  biosample_attrs = sample_attrs,
                                  submission_accession = sub_acc)
   # test basic structure of submission object
-  expect_equal(names(submission), c("biosamples","metadata"))
+  expect_equal(names(submission), c("biosamples", "metadata"))
   # check individual data frames
   check_biosamples(submission[["biosamples"]], template, sample_attrs, sub_acc)
   check_metadata(submission[["metadata"]], sub_acc)
@@ -96,7 +96,7 @@ test_that("build_submission handles one-to-many for biosamples/metadata", {
                                  biosample_attrs = sample_attrs,
                                  metadata_attrs = lib_attrs)
   check_biosamples(submission[["biosamples"]], template, sample_attrs)
-  check_metadata(submission[["metadata"]], rows=40)
+  check_metadata(submission[["metadata"]], rows = 40)
 
 
 })
@@ -121,7 +121,8 @@ test_that("validate_submission handles biosample and metadata attributes", {
   biosamples <- submission$biosamples
   mf <- attributes(biosamples)$mandatory_fields
   blnks <- mf[sapply(mf, function(f) any(blank(biosamples[[f]])))]
-  problems_expected_biosamples <- paste("Mandatory field is missing values:", blnks)
+  problems_expected_biosamples <- paste("Mandatory field is missing values:",
+                                        blnks)
   expect_equal(names(attributes(problems$biosamples)), "fields")
   expect_equal(length(attributes(problems$biosamples)[["fields"]]), 11)
   expect_equivalent(problems$biosamples, problems_expected_biosamples)
@@ -229,7 +230,7 @@ test_that("write_submission splits for too many biosamples", {
 
 test_that("write_submission splits for too many metadata entries", {
   sample_attrs <- setup_sra_table()
-  lib_attrs <- setup_multi_md(sample_attrs, N=300)
+  lib_attrs <- setup_multi_md(sample_attrs, N = 300)
   submission <- build_submission(package_name = "MIGS.ba.human-associated.4.0",
                                  biosample_attrs = sample_attrs,
                                  metadata_attrs = lib_attrs)

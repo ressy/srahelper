@@ -35,7 +35,7 @@ build_biosamples_from_template <- function(package_name,
   template_name <- package_name
   if (! package_name %in% list_templates()) {
     pkgs <- read_biosample_packages()
-    template_name <- pkgs[pkgs$DisplayName == package_name, "Name"]
+    template_name <- pkgs[pkgs[["DisplayName"]] == package_name, "Name"]
     if (is.null(template_name)) {
       warning(paste("Template name not recognzied:", package_name))
     }
@@ -44,8 +44,8 @@ build_biosamples_from_template <- function(package_name,
   template <- read_template(template_name, "biosample_attributes")
   # Build biosamples data frame, using rows from sample attributes, columns and
   # column classes from template.
-  len <- nrow(sample_attrs)*ncol(template)
-  biosamples <- as.data.frame(matrix((1:len)*NA, nrow = nrow(sample_attrs)))
+  len <- nrow(sample_attrs) * ncol(template)
+  biosamples <- as.data.frame(matrix( (1:len) * NA, nrow = nrow(sample_attrs)))
   colnames(biosamples) <- colnames(template)
   for (j in 1:ncol(template)) {
     biosamples[[j]] <- methods::as(biosamples[[j]],
@@ -163,7 +163,7 @@ read_biosample_packages <- function(fp=NULL) {
   data <- lapply(columns, function(column) {
     xml2::xml_text(xml2::xml_child(data, column))
   })
-  data <- do.call(cbind.data.frame, c(data,list(stringsAsFactors = FALSE)))
+  data <- do.call(cbind.data.frame, c(data, list(stringsAsFactors = FALSE)))
   data
 }
 
@@ -218,9 +218,10 @@ read_biosample_attributes <- function(fp=NULL) {
     entry_names <- xml2::xml_name(children)
     entry_contents <- split(xml2::xml_text(children), entry_names)
     entry_attrs <- split(xml2::xml_attrs(children), entry_names)
-    list(metadata=entry_contents, extra=entry_attrs)
+    list(metadata = entry_contents, extra = entry_attrs)
   })
-  names(output) <- sapply(output, function(x) x$metadata$HarmonizedName)
+  names(output) <- sapply(output,
+                          function(x) x[["metadata"]][["HarmonizedName"]])
   output
 }
 
@@ -239,11 +240,14 @@ read_biosample_attributes <- function(fp=NULL) {
 download_template <- function(package_name, fp=NULL) {
   # read_template is currently in templates.R.  Should tidy that in one
   # direction or the other.
-  args <- c(package=package_name, action="download_tsv") # or download_excel
+  args <- c(package = package_name, action = "download_tsv") # or download_excel
   url_args <- paste(names(args), args,
                     sep = "=",
                     collapse = "&")
-  url <- paste0("https://", HTTP_SRV["SUBMIT"], "/biosample/template/?", url_args)
+  url <- paste0("https://",
+                HTTP_SRV["SUBMIT"],
+                "/biosample/template/?",
+                url_args)
   if (is.null(fp)) {
     dp <- system.file("extdata", package = methods::getPackageName())
     dp_templates <- file.path(dp, "templates", "biosample_attributes")
@@ -305,14 +309,14 @@ tidy_optional_fields <- function(data) {
 field_descriptions <- function(fields) {
   bs_attrs <- read_biosample_attributes()
   has_name <- function(field, attrib) {
-    (field == attrib$metadata$HarmonizedName) ||
-      (field %in% unlist(attrib$metadata$Synonym))
+    (field == attrib[["metadata"]][["HarmonizedName"]]) ||
+      (field %in% unlist(attrib[["metadata"]][["Synonym"]]))
   }
 
   desc <- sapply(fields, function(field) {
     for (attrib in bs_attrs) {
       if (has_name(field, attrib)) {
-        d <- attrib$metadata$Description
+        d <- attrib[["metadata"]][["Description"]]
         if (is.null(d))
           d <- ""
         return(d)

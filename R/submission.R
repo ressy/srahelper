@@ -164,7 +164,7 @@ chunk_submission <- function(submission, rowsmax=1000) {
                              function(this) sum(md$sample_name == this))
   # assign each sample name to a given chunk to keep max rows per chunk under
   # rowsmax
-  chunk_ids <- sort(ceiling(cumsum(entries_per_name)/rowsmax))
+  chunk_ids <- sort(ceiling(cumsum(entries_per_name) / rowsmax))
   lapply(submission, function(obj) {
     lapply(split(names(chunk_ids), chunk_ids), function(chunk) {
       obj[obj$sample_name %in% chunk, ]
