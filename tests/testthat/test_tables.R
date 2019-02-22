@@ -48,15 +48,6 @@ test_that("write_table writes metadata fields", {
   write_table(data, fp)
   expect_true(file.exists(fp))
   check_table_written(data, fp)
-  # # Rownames will be sample names
-  # rownames(data) <- data$sample_name
-  # # Columns are always character
-  # data$sample_thing1 <- as.character(data$sample_thing1)
-  # # The comments and mandatory fields attributes are always present from read_table
-  # attr(data, "comments") <- character()
-  # attr(data, "mandatory_fields") <- character()
-  # data2 <- read_table(fp)
-  # expect_identical(data2, data)
 })
 
 test_that("write_table handles overwrite options", {
@@ -231,7 +222,8 @@ test_that("validate_fields warns about sample uniqueness", {
   biosamples$host <- 1
   expect_warning(problems <- validate_fields(biosamples))
   expect_equivalent(problems,
-               "Multiple entries cannot have identical attributes (see ?check_uniqueness)")
+                    paste("Multiple entries cannot have",
+                          "identical attributes (see ?check_uniqueness)"))
 })
 
 test_that("validate_fields can skip warnings", {
@@ -278,6 +270,35 @@ test_that("fill_blanks ignores factors", {
   result_expected <- data
   result_observed <- fill_blanks(colnames(data), data)
   expect_equal(result_observed, result_expected)
+})
+
+
+# datemunge ---------------------------------------------------------------
+
+
+test_that("datemunge formats dates", {
+  dates     <- c("1/1/2006",   "10/5/2009",  "12/31/2012")
+  dates_exp <- c("2006-01-01", "2009-10-05", "2012-12-31")
+  dates_obs <- datemunge(dates)
+  expect_equal(dates_obs, dates_exp)
+})
+
+test_that("datemunge accepts arbitrary input field ordering", {
+  # As above, but, D/M/Y
+  dates     <- c("1/1/2006",   "5/10/2009",  "31/12/2012")
+  dates_exp <- c("2006-01-01", "2009-10-05", "2012-12-31")
+  dates_obs <- datemunge(dates, ord_input = c("D", "M", "Y"))
+  expect_equal(dates_obs, dates_exp)
+})
+
+test_that("datemunge rejects invalid input", {
+  dates     <- c("1/1/2006",   "10/5/2009", "not a date")
+  expect_error(datemunge(dates))
+  dates[3] <- "also/not/date"
+  expect_error(datemunge(dates))
+  # Oops, we forgot to specify the field order
+  dates     <- c("1/1/2006",   "5/10/2009",  "31/12/2012")
+  expect_error(datemunge(dates))
 })
 
 

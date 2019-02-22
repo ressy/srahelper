@@ -145,9 +145,10 @@ test_that("validate_sra_submission handles biosample and metadata attributes", {
 test_that("write_sra_submission writes both spreadsheets", {
   sample_attrs <- setup_sra_table()
   sub_acc <- "SUB"
-  submission <- build_sra_submission(package_name = "MIGS.ba.human-associated.4.0",
-                                 biosample_attrs = sample_attrs,
-                                 submission_accession = sub_acc)
+  submission <- build_sra_submission(
+    package_name = "MIGS.ba.human-associated.4.0",
+    biosample_attrs = sample_attrs,
+    submission_accession = sub_acc)
   dp <- tempfile()
   dir.create(dp)
   setwd(dp)
@@ -162,8 +163,9 @@ test_that("write_sra_submission writes both spreadsheets", {
 
 test_that("write_sra_submission writes both spreadsheets, no submission set", {
   sample_attrs <- setup_sra_table()
-  submission <- build_sra_submission(package_name = "MIGS.ba.human-associated.4.0",
-                                 biosample_attrs = sample_attrs)
+  submission <- build_sra_submission(
+    package_name = "MIGS.ba.human-associated.4.0",
+    biosample_attrs = sample_attrs)
   dp <- tempfile()
   dir.create(dp)
   setwd(dp)
@@ -178,8 +180,9 @@ test_that("write_sra_submission writes both spreadsheets, no submission set", {
 
 test_that("write_sra_submission handles overwrite options", {
   sample_attrs <- setup_sra_table()
-  submission <- build_sra_submission(package_name = "MIGS.ba.human-associated.4.0",
-                                 biosample_attrs = sample_attrs)
+  submission <- build_sra_submission(
+    package_name = "MIGS.ba.human-associated.4.0",
+    biosample_attrs = sample_attrs)
   dp <- tempfile()
   dir.create(dp)
   setwd(dp)
@@ -206,8 +209,9 @@ test_that("write_sra_submission splits for too many biosamples", {
              sample_thing1 = (1:1020),
              sample_thing2 = letters[1:5],
              stringsAsFactors = FALSE)
-  submission <- build_sra_submission(package_name = "MIGS.ba.human-associated.4.0",
-                                 biosample_attrs = sample_attrs)
+  submission <- build_sra_submission(
+    package_name = "MIGS.ba.human-associated.4.0",
+    biosample_attrs = sample_attrs)
   dp <- tempfile()
   dir.create(dp)
   setwd(dp)
@@ -232,9 +236,10 @@ test_that("write_sra_submission splits for too many biosamples", {
 test_that("write_sra_submission splits for too many metadata entries", {
   sample_attrs <- setup_sra_table()
   lib_attrs <- setup_multi_md(sample_attrs, N = 300)
-  submission <- build_sra_submission(package_name = "MIGS.ba.human-associated.4.0",
-                                 biosample_attrs = sample_attrs,
-                                 metadata_attrs = lib_attrs)
+  submission <- build_sra_submission(
+    package_name = "MIGS.ba.human-associated.4.0",
+    biosample_attrs = sample_attrs,
+    metadata_attrs = lib_attrs)
   dp <- tempfile()
   dir.create(dp)
   setwd(dp)

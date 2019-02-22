@@ -11,7 +11,8 @@ build_biosamples_from_template(package_name, sample_attrs,
 \item{package_name}{name of BioSample Package for the template to use, as
 either the display name (e.g., "MIGS: cultured bacteria/archaea,
 human-associated; version 4.0") or the short name (e.g.,
-"MIGS.ba.human-associated.4.0")}
+"MIGS.ba.human-associated.4.0").  Call \code{\link{list_templates}} to see
+all the pre-installed templates by their short name.}
 
 \item{sample_attrs}{data frame of existing sample metadata to draw from.  Any
 names given in the \code{col_pairs} argument will be used to explicitly map

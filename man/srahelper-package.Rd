@@ -9,6 +9,17 @@
 A jumble of helper functions to assist with preparing NCBI data submissions
 and working with the associated files.
 }
+\details{
+Some summaries by topic:
+\itemize{
+\item \link{biosamples}: BioSample preparation
+\item \link{sra_metadata}: SRA Metadata preparation
+\item \link{sra_submission}: High-level handling for both BioSample and SRA Metadata entries
+\item \link{tables}: General helper functions for NCBI spreadsheets and columns
+\item \link{templates}: General helper functions for premade NCBI submission templates
+\item \link{seqdata}: Sequence data file helpers
+}
+}
 \author{
 \strong{Maintainer}: Jesse Connell \email{ancon@upenn.edu}
 
