@@ -1,5 +1,19 @@
-# Functions to handle SRA Library Metadata tables (the info specific to sample
-# preparation and sequencing; for general metadata, see tables.R.)
+#' NCBI SRA Metadata
+#'
+#' These functions help manage SRA Metadata spreadsheets and individual
+#' fields.
+#'
+#' Notable functions:
+#'
+#' * \code{\link{build_metadata}}: make a new spreadsheet from existing
+#'   metadata and the standard template.
+#' * \code{\link{write_metadata}}: save a prepared metadata spreadsheet to a
+#'   file.
+#'
+#' @md
+#'
+#' @name sra_metadata
+NULL
 
 #' @describeIn write_biosamples Write SRA library metadata to disk
 write_metadata <- function(data, ...) {

@@ -12,7 +12,7 @@ fill_blanks(vec, data = NULL, value = "missing")
 \item{data}{data frame to use, if filling multiple columns.}
 
 \item{value}{text to fill with; one of the allowed values in
-\code{BLANK_TYPES}.}
+\code{\link{BLANK_TYPES}}.}
 }
 \value{
 data modified vector or data frame with blanks filled in.

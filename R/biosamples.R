@@ -6,9 +6,9 @@
 #' Notable functions:
 #'
 #' * \code{\link{build_biosamples_from_template}}: make a new spreadsheet from a
-#'   template name and existing metadata.
+#'   template name and existing metadata
 #' * \code{\link{write_biosamples}}: save a prepared biosamples spreadsheet to a
-#  ' file.
+#  ' file
 #'
 #' @md
 #'

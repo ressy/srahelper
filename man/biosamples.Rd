@@ -11,7 +11,7 @@ fields.
 Notable functions:
 \itemize{
 \item \code{\link{build_biosamples_from_template}}: make a new spreadsheet from a
-template name and existing metadata.
+template name and existing metadata
 \item \code{\link{write_biosamples}}: save a prepared biosamples spreadsheet to a
 }
 }

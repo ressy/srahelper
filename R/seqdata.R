@@ -1,4 +1,20 @@
-# Sequence data functions
+#' Sequence Data Functions
+#'
+#' These functions help manage sequence data.  Currently there's just one public
+#' function, to check for zero-sequence files.
+#'
+#' Notable functions:
+#'
+#' * \code{\link{has_zero_seqs}}: check for empty fasta/fastq/fasta.gz/fastq.gz
+#'
+#' @md
+#'
+#' @name seqdata
+NULL
+
+
+# has_zero_seqs -----------------------------------------------------------
+
 
 #' Report files containing no sequences
 #'
@@ -53,6 +69,7 @@ has_magic <- function(filepaths, magic) {
     identical(charToRaw(prefix), as.raw(magic))
   })
 }
+
 
 # Misc extras -------------------------------------------------------------
 

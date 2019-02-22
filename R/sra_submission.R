@@ -1,4 +1,20 @@
-# High-level functions for handling SRA submission data.
+#' NCBI SRA Submissions
+#'
+#' These are high-level functions for handling SRA submission data (both
+#' \link{biosamples} and \link{sra_metadata}).
+#'
+#' Notable functions:
+#'
+#' * \code{\link{build_sra_submission}}: prepare both submission spreadsheets in
+#'   one step.
+#' * \code{\link{write_biosamples}}: save both prepared spreadsheets to files.
+#'   Also handles breaking up the spreadsheets if there would be too many rows
+#'   for the submission portal.
+#'
+#' @md
+#'
+#' @name sra_submission
+NULL
 
 #' Create BioSamples Attributes and SRA Metadata Tables
 #'
@@ -109,7 +125,7 @@ write_sra_submission <- function(submission, ...) {
       data <- submission[[thing]][[i]]
       sub_acc <- attributes(submission[[thing]][[i]])$submission
       # If we have a submission accession, include that in the
-      # directory/filename.
+      # directory and filename.
       if (! is.null(sub_acc)) {
         dp <- sub_acc
         if (! dir.exists(dp)) {
